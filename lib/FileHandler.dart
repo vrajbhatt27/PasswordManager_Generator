@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
+// ignore: unused_import
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class FileHandler {
@@ -10,10 +12,6 @@ class FileHandler {
   Map<String, dynamic> data;
 
   FileHandler({@required this.dir, @required this.jsonFile});
-
-  File get getJsonFile {
-    return jsonFile;
-  }
 
   void createFile(Map<String, dynamic> content) {
     print('creating file...!');
@@ -27,7 +25,6 @@ class FileHandler {
     print('writing to file...!');
     Map<String, dynamic> content = {key: value};
 
-    fexists = jsonFile.existsSync();
     if (fexists) {
       print('file exists.');
       Map<String, dynamic> jsonfcontent =

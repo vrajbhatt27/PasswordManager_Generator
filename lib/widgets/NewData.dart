@@ -30,7 +30,7 @@ class _NewData extends State<NewData> {
       jsonFile = File(dir.path + '/' + fname);
       fexists = jsonFile.existsSync();
       if (fexists) {
-        setState(() {
+        this.setState(() {
           data = jsonDecode(jsonFile.readAsStringSync());
         });
       }
