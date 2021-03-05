@@ -29,48 +29,65 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  File jsonFile;
-  Directory dir;
-  bool fexists = false;
-  String fname = 'data.json';
-  Map<String, dynamic> data;
+  File _jsonFile;
+  Directory _dir;
+  bool _fexists = false;
+  String _fname = 'data.json';
+  Map<String, dynamic> _data;
 
-	@override
+  @override
   void initState() {
     super.initState();
     getApplicationDocumentsDirectory().then((Directory directory) {
-      dir = directory;
-      jsonFile = File(dir.path + '/' + fname);
-      fexists = jsonFile.existsSync();
-      if (fexists) {
+      _dir = directory;
+      _jsonFile = File(_dir.path + '/' + _fname);
+      _fexists = _jsonFile.existsSync();
+      if (_fexists) {
         setState(() {
-          data = jsonDecode(jsonFile.readAsStringSync());
+          _data = jsonDecode(_jsonFile.readAsStringSync());
         });
       }
     });
   }
 
-	void callWrite2File(String key, dynamic value) {
-    FileHandler fh = FileHandler(jsonFile);
+  void _callWrite2File(String key, dynamic value) {
+    FileHandler fh = FileHandler(_jsonFile);
     fh.write2File(key, value);
     this.setState(() {
-      data = jsonDecode(jsonFile.readAsStringSync());
+      _data = jsonDecode(_jsonFile.readAsStringSync());
     });
+  }
+
+  void _addNewData(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (bCtx) {
+          return GestureDetector(
+            onTap: () {},
+            child: NewData(_callWrite2File),
+            behavior: HitTestBehavior.opaque,
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Json Demo'),
+      appBar: AppBar(
+        title: Text('Json Demo'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ShowData(_data),
+          ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-							ShowData(data),
-              NewData(callWrite2File),
-            ],
-          ),
-        ));
+      ),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+				onPressed: () => _addNewData(context),
+      ),
+    );
   }
 }

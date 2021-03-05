@@ -2,34 +2,33 @@ import 'dart:io';
 import 'dart:convert';
 
 class FileHandler {
-  File jsonFile;
-  Map<String, dynamic> data;
+  File _jsonFile;
 
-  FileHandler(this.jsonFile);
+  FileHandler(this._jsonFile);
 
-  void createFile(Map<String, dynamic> content) {
+  void _createFile(Map<String, dynamic> content) {
     print('creating file...!');
-    jsonFile.createSync();
-    jsonFile.writeAsStringSync(jsonEncode(content));
+    _jsonFile.createSync();
+    _jsonFile.writeAsStringSync(jsonEncode(content));
   }
 
   void write2File(String key, dynamic value) {
     Map<String, dynamic> content = {key: value};
 
-    bool fexists = jsonFile.existsSync();
+    bool fexists = _jsonFile.existsSync();
 
     if (fexists) {
       print('writing to file...!');
       Map<String, dynamic> jsonfcontent =
-          jsonDecode(jsonFile.readAsStringSync());
+          jsonDecode(_jsonFile.readAsStringSync());
 
       jsonfcontent.addAll(content);
 
-      jsonFile.writeAsStringSync(jsonEncode(jsonfcontent));
+      _jsonFile.writeAsStringSync(jsonEncode(jsonfcontent));
       print('Done Writing.');
     } else {
       print('file doesnot exist...!!!');
-      createFile(content);
+      _createFile(content);
     }
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ShowData extends StatefulWidget {
-  final Map<String, dynamic> data;
+  final Map<String, dynamic> _data;
 
-  ShowData(this.data);
+  ShowData(this._data);
 
   @override
   _ShowDataState createState() => _ShowDataState();
@@ -19,7 +19,7 @@ class _ShowDataState extends State<ShowData> {
       child: Card(
         elevation: 5,
         child: Text(
-          widget.data.toString(),
+          widget._data.toString(),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
