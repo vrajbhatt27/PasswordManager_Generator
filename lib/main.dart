@@ -34,6 +34,16 @@ class _TestState extends State<Test> {
   bool _fexists = false;
   String _fname = 'data.json';
   Map<String, dynamic> _data;
+  List<Map> dataLst = [];
+
+  List<Map> map2List(Map<String, dynamic> data) {
+    List<Map> dataLst = [];
+    data.forEach((key, value) {
+      dataLst.add({key: value});
+    });
+
+    return dataLst;
+  }
 
   @override
   void initState() {
@@ -45,6 +55,7 @@ class _TestState extends State<Test> {
       if (_fexists) {
         setState(() {
           _data = jsonDecode(_jsonFile.readAsStringSync());
+          dataLst = map2List(_data);
         });
       }
     });
@@ -53,8 +64,10 @@ class _TestState extends State<Test> {
   void _callWrite2File(String key, dynamic value) {
     FileHandler fh = FileHandler(_jsonFile);
     fh.write2File(key, value);
+
     this.setState(() {
       _data = jsonDecode(_jsonFile.readAsStringSync());
+      dataLst = map2List(_data);
     });
   }
 
@@ -79,14 +92,14 @@ class _TestState extends State<Test> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ShowData(_data),
+            ShowData(dataLst),
           ],
         ),
       ),
-			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-				onPressed: () => _addNewData(context),
+        onPressed: () => _addNewData(context),
       ),
     );
   }

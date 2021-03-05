@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
 
 class ShowData extends StatefulWidget {
-  final Map<String, dynamic> _data;
+  final List<Map> _dataLst;
 
-  ShowData(this._data);
+  ShowData(this._dataLst) {
+    print(_dataLst);
+  }
 
   @override
   _ShowDataState createState() => _ShowDataState();
 }
 
 class _ShowDataState extends State<ShowData> {
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      width: double.infinity,
-      child: Card(
-        elevation: 5,
-        child: Text(
-          widget._data.toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+    return Container(
+      height: 500,
+      child: ListView.builder(
+        itemBuilder: (ctx, index) {
+          String key = (widget._dataLst[index].keys.toList()[0]).toString();
+          String email = widget._dataLst[index][key]['email'];
+
+          // String pwd = dataLst[index][key]['email'];
+
+          return Card(
+            elevation: 5,
+            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                child: Padding(
+                  padding: EdgeInsets.all(6),
+                  child: FittedBox(
+                    child: Text('>'),
+                  ),
+                ),
+              ),
+              title: Text(key),
+              subtitle: Text(email),
+            ),
+          );
+        },
+        itemCount: widget._dataLst.length,
       ),
     );
   }
