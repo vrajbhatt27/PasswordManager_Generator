@@ -17,7 +17,7 @@ class _ShowDataState extends State<ShowData> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return PopCard();
+          return PopUpCard();
         });
   }
 
@@ -27,8 +27,9 @@ class _ShowDataState extends State<ShowData> {
       height: 500,
       child: ListView.builder(
         itemBuilder: (ctx, index) {
-          String key = (widget._dataLst[index].keys.toList()[0]).toString();
-          String email = widget._dataLst[index][key]['email'];
+          String app = (widget._dataLst[index].keys.toList()[0]).toString();
+          String email = widget._dataLst[index][app]['email'];
+          String id = widget._dataLst[index][app]['id'];
 
           // String pwd = dataLst[index][key]['email'];
 
@@ -46,7 +47,7 @@ class _ShowDataState extends State<ShowData> {
                   ),
                 ),
               ),
-              title: Text(key),
+              title: Text(app),
               subtitle: Text(email),
             ),
           );
