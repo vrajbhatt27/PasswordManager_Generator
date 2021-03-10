@@ -33,6 +33,8 @@ class _NewData extends State<NewData> {
 
     print(appInfo);
     widget._callWrite2File(_appCtrl.text, appInfo);
+
+    Navigator.of(context).pop();
   }
 
   Widget _inputDataTextField(String lbl, TextEditingController ctrl) {

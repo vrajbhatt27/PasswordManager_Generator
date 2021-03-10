@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './popupCard.dart';
 
 class ShowData extends StatefulWidget {
   final List<Map> _dataLst;
@@ -12,6 +13,14 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
+  void showPopUp(BuildContext ctx) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PopCard();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,6 +36,7 @@ class _ShowDataState extends State<ShowData> {
             elevation: 5,
             margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
             child: ListTile(
+              onTap: () => showPopUp(context),
               leading: CircleAvatar(
                 radius: 30,
                 child: Padding(
