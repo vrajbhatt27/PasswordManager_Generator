@@ -16,7 +16,26 @@ class _NewData extends State<NewData> {
 
   Map<String, String> appInfo = {};
 
+  String _addId(app) {
+    String uniqId = DateTime.now().toString();
+    var lst = uniqId.split('');
+    lst = lst.where((e) {
+      if (e == '-' || e == '.' || e == ':' || e == ' ') {
+        return false;
+      }
+      return true;
+    }).toList();
+
+    String id = '';
+    for (var e in lst) {
+      id += e;
+    }
+
+    return app + id;
+  }
+
   void _addData() {
+    String app = _appCtrl.text;
     List<String> keys = ['email', 'userId', 'password', 'mobile no'];
     List<String> values = [
       _emailCtrl.text,
@@ -31,8 +50,11 @@ class _NewData extends State<NewData> {
       }
     }
 
+    appInfo['id'] = _addId(app);
+
     print(appInfo);
-    widget._callWrite2File(_appCtrl.text, appInfo);
+
+    widget._callWrite2File(app, appInfo);
 
     Navigator.of(context).pop();
   }
