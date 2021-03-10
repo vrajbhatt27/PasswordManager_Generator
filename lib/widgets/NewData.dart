@@ -25,7 +25,6 @@ class _NewData extends State<NewData> {
       }
       return true;
     }).toList();
-
     String id = '';
     for (var e in lst) {
       id += e;
@@ -35,9 +34,9 @@ class _NewData extends State<NewData> {
   }
 
   void _addData() {
-    String app = _appCtrl.text;
-    List<String> keys = ['email', 'userId', 'password', 'mobile no'];
+    List<String> keys = ['app', 'email', 'userId', 'password', 'mobile no'];
     List<String> values = [
+      _appCtrl.text,
       _emailCtrl.text,
       _unameCtrl.text,
       _pwdCtrl.text,
@@ -50,11 +49,11 @@ class _NewData extends State<NewData> {
       }
     }
 
-    appInfo['id'] = _addId(app);
+    String appId = _addId(_appCtrl.text);
 
     print(appInfo);
 
-    widget._callWrite2File(app, appInfo);
+    widget._callWrite2File(appId, appInfo);
 
     Navigator.of(context).pop();
   }

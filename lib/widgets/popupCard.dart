@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PopUpCard extends StatelessWidget {
-  
+  final Map<String, dynamic> data;
+  final String id;
+
+  PopUpCard({@required this.data, @required this.id});
+	
   Widget popUpContent() {
+    Map info = data[id];
     return Container(
         height: 200,
         width: 200,
@@ -10,8 +15,8 @@ class PopUpCard extends StatelessWidget {
         margin: EdgeInsets.all(10),
         color: Colors.white,
         child: Column(
-          children: [],
-        ));
+					children: info.entries.map((e) => Text(e.key + ': ' + e.value + '\n')).toList(),
+				));
   }
 
   @override

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import './popupCard.dart';
 
 class ShowData extends StatefulWidget {
-  final List<Map> _dataLst;
+  // final List<Map> _dataLst;
+  final Map<String, dynamic> data;
 
-  ShowData(this._dataLst) {
-    print(_dataLst);
+  ShowData(this.data) {
+    print('In ShowData');
+    print(data);
   }
 
   @override
@@ -13,11 +15,14 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
-  void showPopUp(BuildContext ctx) {
+  void showPopUp(BuildContext ctx, Map<String, dynamic> data, String id) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return PopUpCard();
+          return PopUpCard(
+            id: id,
+            data: data,
+          );
         });
   }
 
@@ -27,17 +32,21 @@ class _ShowDataState extends State<ShowData> {
       height: 500,
       child: ListView.builder(
         itemBuilder: (ctx, index) {
-          String app = (widget._dataLst[index].keys.toList()[0]).toString();
-          String email = widget._dataLst[index][app]['email'];
-          String id = widget._dataLst[index][app]['id'];
+          // String app = (widget.data[index].keys.toList()[0]).toString();
+          // String email = widget.data[index][app]['email'];
+          // String id = widget.data[index][app]['id'];
 
           // String pwd = dataLst[index][key]['email'];
+
+          String appId = widget.data.keys.elementAt(index);
+          String email = widget.data[appId]['email'];
+          String app = widget.data[appId]['app'];
 
           return Card(
             elevation: 5,
             margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
             child: ListTile(
-              onTap: () => showPopUp(context),
+              onTap: () => showPopUp(context, widget.data, appId),
               leading: CircleAvatar(
                 radius: 30,
                 child: Padding(
@@ -52,7 +61,7 @@ class _ShowDataState extends State<ShowData> {
             ),
           );
         },
-        itemCount: widget._dataLst.length,
+        itemCount: widget.data.length,
       ),
     );
   }

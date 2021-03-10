@@ -33,17 +33,17 @@ class _TestState extends State<Test> {
   Directory _dir;
   bool _fexists = false;
   String _fname = 'data.json';
-  Map<String, dynamic> _data;
-  List<Map> dataLst = [];
+  Map<String, dynamic> _data = {};
+  // List<Map> dataLst = [];
 
-  List<Map> map2List(Map<String, dynamic> data) {
-    List<Map> dataLst = [];
-    data.forEach((key, value) {
-      dataLst.add({key: value});
-    });
+  // List<Map> map2List(Map<String, dynamic> data) {
+  //   List<Map> dataLst = [];
+  //   data.forEach((key, value) {
+  //     dataLst.add({key: value});
+  //   });
 
-    return dataLst;
-  }
+  //   return dataLst;
+  // }
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _TestState extends State<Test> {
       if (_fexists) {
         setState(() {
           _data = jsonDecode(_jsonFile.readAsStringSync());
-          dataLst = map2List(_data);
+          // dataLst = map2List(_data);
         });
       }
     });
@@ -67,7 +67,7 @@ class _TestState extends State<Test> {
 
     this.setState(() {
       _data = jsonDecode(_jsonFile.readAsStringSync());
-      dataLst = map2List(_data);
+      // dataLst = map2List(_data);
     });
   }
 
@@ -92,7 +92,7 @@ class _TestState extends State<Test> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ShowData(dataLst),
+            ShowData(_data),
           ],
         ),
       ),
