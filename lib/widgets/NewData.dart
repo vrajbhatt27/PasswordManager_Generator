@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class NewData extends StatefulWidget {
-  final Function _callWrite2File;
-  NewData(this._callWrite2File);
+  final Function callWrite2File;
+  final data;
+  final String appId;
+
+  NewData(this.callWrite2File, {this.data = '', this.appId = ''});
   @override
   _NewData createState() => _NewData();
 }
@@ -33,7 +36,7 @@ class _NewData extends State<NewData> {
     return app + id;
   }
 
-  void _addData() {
+  void _addData({String id = ''}) {
     List<String> keys = ['app', 'email', 'userId', 'password', 'mobile no'];
     List<String> values = [
       _appCtrl.text,
@@ -49,11 +52,9 @@ class _NewData extends State<NewData> {
       }
     }
 
-    String appId = _addId(_appCtrl.text);
+    String appId =  id.isEmpty ? _addId(_appCtrl.text) : id;
 
-    print(appInfo);
-
-    widget._callWrite2File(appId, appInfo);
+    widget.callWrite2File(appId, appInfo);
 
     Navigator.of(context).pop();
   }
@@ -71,19 +72,54 @@ class _NewData extends State<NewData> {
     );
   }
 
+  List<Widget> get forNewData {
+    return [
+      _inputDataTextField('App', _appCtrl),
+      _inputDataTextField('email', _emailCtrl),
+      _inputDataTextField('user name', _unameCtrl),
+      _inputDataTextField('password', _pwdCtrl),
+      _inputDataTextField('Mobile Number', _mnoCtrl),
+    ];
+  }
+
+  List<Widget> get forUpdateData {
+    Map info = widget.data[widget.appId]; // contains the map of values.
+    _appCtrl.text = info['app'];
+    if (info.containsKey('email')) _emailCtrl.text = info['email'];
+		if (info.containsKey('userId')) _unameCtrl.text = info['userId'];
+		if (info.containsKey('password')) _pwdCtrl.text = info['password'];
+		if (info.containsKey('mobile no')) _mnoCtrl.text = info['mobile no'];
+
+    return [
+      _inputDataTextField('App', _appCtrl),
+      _inputDataTextField('email', _emailCtrl),
+      _inputDataTextField('user name', _unameCtrl),
+      _inputDataTextField('password', _pwdCtrl),
+      _inputDataTextField('Mobile Number', _mnoCtrl),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool update = false;
+
+    if (widget.appId.isNotEmpty) {
+      update = true;
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _inputDataTextField('App', _appCtrl),
-          _inputDataTextField('email', _emailCtrl),
-          _inputDataTextField('user name', _unameCtrl),
-          _inputDataTextField('password', _pwdCtrl),
-          _inputDataTextField('Mobile Number', _mnoCtrl),
+					
+					if(update)
+						...forUpdateData
+					else
+						...forNewData
+					,
+					
           ElevatedButton(
-            onPressed: _addData,
+            onPressed: update ? () => _addData(id: widget.appId) : _addData,
             child: Text(
               'Save',
               style: TextStyle(fontWeight: FontWeight.bold),

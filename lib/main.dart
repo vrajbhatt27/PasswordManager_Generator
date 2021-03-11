@@ -71,13 +71,18 @@ class _TestState extends State<Test> {
     });
   }
 
-  void _addNewData(BuildContext ctx) {
+  void _addNewData(BuildContext ctx, {dynamic data = '', String appId = ''}) {
+    bool update = false;
+    if (appId.isNotEmpty) {
+      update = true;
+    }
+
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
           return GestureDetector(
             onTap: () {},
-            child: NewData(_callWrite2File),
+            child: update ? NewData(_callWrite2File, data: data, appId: appId,):NewData(_callWrite2File),
             behavior: HitTestBehavior.opaque,
           );
         });
@@ -92,7 +97,7 @@ class _TestState extends State<Test> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ShowData(_data),
+            ShowData(_data, _addNewData),
           ],
         ),
       ),

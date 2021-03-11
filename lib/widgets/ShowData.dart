@@ -4,10 +4,11 @@ import './popupCard.dart';
 class ShowData extends StatefulWidget {
   // final List<Map> _dataLst;
   final Map<String, dynamic> data;
+  final Function _updateData;
 
-  ShowData(this.data) {
-    print('In ShowData');
-    print(data);
+  ShowData(this.data, this._updateData) {
+    // print('In ShowData');
+    // print(data.toString() + '\n');
   }
 
   @override
@@ -58,6 +59,11 @@ class _ShowDataState extends State<ShowData> {
               ),
               title: Text(app),
               subtitle: Text(email),
+              trailing: IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () => widget._updateData(context,
+                    data: widget.data, appId: appId),
+              ),
             ),
           );
         },
