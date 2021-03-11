@@ -5,8 +5,9 @@ class ShowData extends StatefulWidget {
   // final List<Map> _dataLst;
   final Map<String, dynamic> data;
   final Function _updateData;
+  final Function _deleteData;
 
-  ShowData(this.data, this._updateData) {
+  ShowData(this.data, this._updateData, this._deleteData) {
     // print('In ShowData');
     // print(data.toString() + '\n');
   }
@@ -40,8 +41,15 @@ class _ShowDataState extends State<ShowData> {
           // String pwd = dataLst[index][key]['email'];
 
           String appId = widget.data.keys.elementAt(index);
-          String email = widget.data[appId]['email'];
           String app = widget.data[appId]['app'];
+          String subtitle;
+          if (widget.data[appId].containsKey('email')) {
+            subtitle = widget.data[appId]['email'];
+          } else if (widget.data[appId].containsKey('mobile no')) {
+            subtitle = widget.data[appId]['mobile no'];
+          } else {
+            subtitle = '';
+          }
 
           return Card(
             elevation: 5,
@@ -58,11 +66,21 @@ class _ShowDataState extends State<ShowData> {
                 ),
               ),
               title: Text(app),
-              subtitle: Text(email),
-              trailing: IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () => widget._updateData(context,
-                    data: widget.data, appId: appId),
+              subtitle: Text(subtitle),
+              trailing: PopupMenuButton(
+                onSelected: (choice) {
+                  if (choice == 'Edit') {
+                    widget._updateData(context,
+                        data: widget.data, appId: appId);
+                  } else if (choice == 'Delete') {
+                    widget._deleteData(appId);
+                  }
+                },
+                itemBuilder: (BuildContext ctx) {
+                  return ['Edit', 'Delete'].map((choice) {
+                    return PopupMenuItem(child: Text(choice), value: choice);
+                  }).toList();
+                },
               ),
             ),
           );

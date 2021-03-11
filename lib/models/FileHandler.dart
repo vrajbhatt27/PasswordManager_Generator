@@ -31,4 +31,8 @@ class FileHandler {
       _createFile(content);
     }
   }
+
+	void deleteData(Map<String, dynamic> content){
+		_jsonFile.writeAsStringSync(jsonEncode(content));
+	}
 }

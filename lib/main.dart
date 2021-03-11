@@ -82,10 +82,25 @@ class _TestState extends State<Test> {
         builder: (bCtx) {
           return GestureDetector(
             onTap: () {},
-            child: update ? NewData(_callWrite2File, data: data, appId: appId,):NewData(_callWrite2File),
+            child: update
+                ? NewData(
+                    _callWrite2File,
+                    data: data,
+                    appId: appId,
+                  )
+                : NewData(_callWrite2File),
             behavior: HitTestBehavior.opaque,
           );
         });
+  }
+
+  void _deleteData(String appId) {
+    _data.remove(appId);
+		FileHandler fh = FileHandler(_jsonFile);
+    fh.deleteData(_data);
+		setState(() {
+		  _data = jsonDecode(_jsonFile.readAsStringSync());
+		});
   }
 
   @override
@@ -97,7 +112,7 @@ class _TestState extends State<Test> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ShowData(_data, _addNewData),
+            ShowData(_data, _addNewData, _deleteData),
           ],
         ),
       ),
