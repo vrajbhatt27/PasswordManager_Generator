@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../models/Security.dart';
 
 class NewData extends StatefulWidget {
-  final Function callWrite2File;
+  final Function _callWrite2File;
   final data;
   final String appId;
 
-  NewData(this.callWrite2File, {this.data = '', this.appId = ''});
+  NewData(this._callWrite2File, {this.data = '', this.appId = ''});
   @override
   _NewData createState() => _NewData();
 }
@@ -17,7 +18,7 @@ class _NewData extends State<NewData> {
   TextEditingController _pwdCtrl = TextEditingController();
   TextEditingController _mnoCtrl = TextEditingController();
 
-  Map<String, String> appInfo = {};
+  Map<String, String> _appInfo = {};
 
   String _addId(app) {
     String uniqId = DateTime.now().toString();
@@ -36,25 +37,32 @@ class _NewData extends State<NewData> {
     return app + id;
   }
 
-  void _addData({String id = ''}) {
+  void _addData({String id = ''}) async {
+		
+    String pwd = _pwdCtrl.text;
+    String encPwd;
+    if (pwd.isNotEmpty) encPwd = await encrypt(pwd);
+
+    print('(In NewData)cipher text--> '+encPwd.toString());
+
     List<String> keys = ['app', 'email', 'userId', 'password', 'mobile no'];
     List<String> values = [
       _appCtrl.text,
       _emailCtrl.text,
       _unameCtrl.text,
-      _pwdCtrl.text,
+      if(encPwd != null) encPwd,
       _mnoCtrl.text
     ];
 
     for (var i = 0; i < values.length; i++) {
       if (values[i].isNotEmpty) {
-        appInfo[keys[i]] = values[i];
+        _appInfo[keys[i]] = values[i];
       }
     }
 
-    String appId =  id.isEmpty ? _addId(_appCtrl.text) : id;
+    String appId = id.isEmpty ? _addId(_appCtrl.text) : id;
 
-    widget.callWrite2File(appId, appInfo);
+    widget._callWrite2File(appId, _appInfo);
 
     Navigator.of(context).pop();
   }
@@ -72,7 +80,12 @@ class _NewData extends State<NewData> {
     );
   }
 
-  List<Widget> get forNewData {
+  void _getDecryptedPassword(String cipher) async {
+    String pwd = await decrypt(cipher);
+    _pwdCtrl.text = pwd;
+  }
+
+  List<Widget> get _forNewData {
     return [
       _inputDataTextField('App', _appCtrl),
       _inputDataTextField('email', _emailCtrl),
@@ -82,13 +95,13 @@ class _NewData extends State<NewData> {
     ];
   }
 
-  List<Widget> get forUpdateData {
+  List<Widget> get _forUpdateData {
     Map info = widget.data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];
     if (info.containsKey('email')) _emailCtrl.text = info['email'];
-		if (info.containsKey('userId')) _unameCtrl.text = info['userId'];
-		if (info.containsKey('password')) _pwdCtrl.text = info['password'];
-		if (info.containsKey('mobile no')) _mnoCtrl.text = info['mobile no'];
+    if (info.containsKey('userId')) _unameCtrl.text = info['userId'];
+    if (info.containsKey('password')) _getDecryptedPassword(info['password']);
+    if (info.containsKey('mobile no')) _mnoCtrl.text = info['mobile no'];
 
     return [
       _inputDataTextField('App', _appCtrl),
@@ -111,13 +124,7 @@ class _NewData extends State<NewData> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-					
-					if(update)
-						...forUpdateData
-					else
-						...forNewData
-					,
-					
+          if (update) ..._forUpdateData else ..._forNewData,
           ElevatedButton(
             onPressed: update ? () => _addData(id: widget.appId) : _addData,
             child: Text(

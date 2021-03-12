@@ -34,16 +34,6 @@ class _TestState extends State<Test> {
   bool _fexists = false;
   String _fname = 'data.json';
   Map<String, dynamic> _data = {};
-  // List<Map> dataLst = [];
-
-  // List<Map> map2List(Map<String, dynamic> data) {
-  //   List<Map> dataLst = [];
-  //   data.forEach((key, value) {
-  //     dataLst.add({key: value});
-  //   });
-
-  //   return dataLst;
-  // }
 
   @override
   void initState() {
@@ -67,7 +57,6 @@ class _TestState extends State<Test> {
 
     this.setState(() {
       _data = jsonDecode(_jsonFile.readAsStringSync());
-      // dataLst = map2List(_data);
     });
   }
 
@@ -96,11 +85,11 @@ class _TestState extends State<Test> {
 
   void _deleteData(String appId) {
     _data.remove(appId);
-		FileHandler fh = FileHandler(_jsonFile);
+    FileHandler fh = FileHandler(_jsonFile);
     fh.deleteData(_data);
-		setState(() {
-		  _data = jsonDecode(_jsonFile.readAsStringSync());
-		});
+    setState(() {
+      _data = jsonDecode(_jsonFile.readAsStringSync());
+    });
   }
 
   @override

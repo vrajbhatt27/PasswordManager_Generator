@@ -2,22 +2,18 @@ import 'package:flutter/material.dart';
 import './popupCard.dart';
 
 class ShowData extends StatefulWidget {
-  // final List<Map> _dataLst;
   final Map<String, dynamic> data;
   final Function _updateData;
   final Function _deleteData;
 
-  ShowData(this.data, this._updateData, this._deleteData) {
-    // print('In ShowData');
-    // print(data.toString() + '\n');
-  }
+  ShowData(this.data, this._updateData, this._deleteData);
 
   @override
   _ShowDataState createState() => _ShowDataState();
 }
 
 class _ShowDataState extends State<ShowData> {
-  void showPopUp(BuildContext ctx, Map<String, dynamic> data, String id) {
+  void _showPopUp(BuildContext ctx, Map<String, dynamic> data, String id) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -34,12 +30,6 @@ class _ShowDataState extends State<ShowData> {
       height: 500,
       child: ListView.builder(
         itemBuilder: (ctx, index) {
-          // String app = (widget.data[index].keys.toList()[0]).toString();
-          // String email = widget.data[index][app]['email'];
-          // String id = widget.data[index][app]['id'];
-
-          // String pwd = dataLst[index][key]['email'];
-
           String appId = widget.data.keys.elementAt(index);
           String app = widget.data[appId]['app'];
           String subtitle;
@@ -55,7 +45,7 @@ class _ShowDataState extends State<ShowData> {
             elevation: 5,
             margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
             child: ListTile(
-              onTap: () => showPopUp(context, widget.data, appId),
+              onTap: () => _showPopUp(context, widget.data, appId),
               leading: CircleAvatar(
                 radius: 30,
                 child: Padding(
