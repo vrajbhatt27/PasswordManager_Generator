@@ -35,6 +35,7 @@ class _TestState extends State<Test> {
   String _fname = 'data.json';
   Map<String, dynamic> _data = {};
 
+	// Instantiate the _dir and _file and reads data from jsonFile that are shown on screen.
   @override
   void initState() {
     super.initState();
@@ -51,6 +52,7 @@ class _TestState extends State<Test> {
     });
   }
 
+	// calls write2File() of FileFandler and writes data into jsonFile.
   void _callWrite2File(String key, dynamic value) {
     FileHandler fh = FileHandler(_jsonFile);
     fh.write2File(key, value);
@@ -60,6 +62,7 @@ class _TestState extends State<Test> {
     });
   }
 
+	// Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then args data and appId are also passed with callwrite2file method.
   void _addNewData(BuildContext ctx, {dynamic data = '', String appId = ''}) {
     bool update = false;
     if (appId.isNotEmpty) {
@@ -83,6 +86,7 @@ class _TestState extends State<Test> {
         });
   }
 
+	// Deletes the given app info and calls deleteData of fileHandler. It also calls setState so that the deleted app info is removed from screen
   void _deleteData(String appId) {
     _data.remove(appId);
     FileHandler fh = FileHandler(_jsonFile);

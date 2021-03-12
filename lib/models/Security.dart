@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:path_provider/path_provider.dart';
 
+// If not present creates new file key.pem and sets a key. If file is present then used to set new key.
 Future<bool> createFile() async {
   Directory dir;
   File file;
@@ -20,6 +21,7 @@ Future<bool> createFile() async {
   return true;
 }
 
+// Encrypts the given password
 Future<String> encrypt(String pwd) async {
   Directory dir;
   await getApplicationDocumentsDirectory().then((Directory directory) {
@@ -32,6 +34,7 @@ Future<String> encrypt(String pwd) async {
   return cipher;
 }
 
+// Decrypts the given password
 Future<String> decrypt(String cipher) async {
   Directory dir;
   await getApplicationDocumentsDirectory().then((Directory directory) {
@@ -47,4 +50,3 @@ Future<String> decrypt(String cipher) async {
 
   return pwd;
 }
-

@@ -20,6 +20,7 @@ class _NewData extends State<NewData> {
 
   Map<String, String> _appInfo = {};
 
+	// returns a unique id for appId:appInfo in jsonFile. This acts as appId.
   String _addId(app) {
     String uniqId = DateTime.now().toString();
     var lst = uniqId.split('');
@@ -37,6 +38,7 @@ class _NewData extends State<NewData> {
     return app + id;
   }
 
+	// It calls the _callWrite2File() of main.dart. Here first appInfo is set and then appId and appInfo are passed as arg to above function. Here if it is called for update operation then new id is not calculated.
   void _addData({String id = ''}) async {
 		
     String pwd = _pwdCtrl.text;
@@ -67,6 +69,7 @@ class _NewData extends State<NewData> {
     Navigator.of(context).pop();
   }
 
+	// Builds textField.
   Widget _inputDataTextField(String lbl, TextEditingController ctrl) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, top: 20),
@@ -80,11 +83,13 @@ class _NewData extends State<NewData> {
     );
   }
 
+	// It sets the pwCtrl.text to decrypted password so that it can be filled on textField. It is used when operation is update. Here decrypt() is called.
   void _getDecryptedPassword(String cipher) async {
     String pwd = await decrypt(cipher);
     _pwdCtrl.text = pwd;
   }
 
+	// It returns a list of _inputDataTextField with no content. Hence used for write or new data entry operations.
   List<Widget> get _forNewData {
     return [
       _inputDataTextField('App', _appCtrl),
@@ -95,6 +100,7 @@ class _NewData extends State<NewData> {
     ];
   }
 
+	// It returns a list of _inputDataTextField with filled content. Hence used for update operation.
   List<Widget> get _forUpdateData {
     Map info = widget.data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];

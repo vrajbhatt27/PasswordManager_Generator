@@ -13,11 +13,12 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
+	// It shows the popUpCard for displaying the details of app.
   void _showPopUp(BuildContext ctx, Map<String, dynamic> data, String id) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return PopUpCard(
+          return PopUpCard(   // calls PopUpCard of popupCard.dart
             id: id,
             data: data,
           );
@@ -30,9 +31,11 @@ class _ShowDataState extends State<ShowData> {
       height: 500,
       child: ListView.builder(
         itemBuilder: (ctx, index) {
-          String appId = widget.data.keys.elementAt(index);
-          String app = widget.data[appId]['app'];
+          String appId = widget.data.keys.elementAt(index); //extract the appId from data.
+          String app = widget.data[appId]['app']; //extract app name from data
           String subtitle;
+
+					// Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
           if (widget.data[appId].containsKey('email')) {
             subtitle = widget.data[appId]['email'];
           } else if (widget.data[appId].containsKey('mobile no')) {
@@ -57,10 +60,10 @@ class _ShowDataState extends State<ShowData> {
               ),
               title: Text(app),
               subtitle: Text(subtitle),
-              trailing: PopupMenuButton(
-                onSelected: (choice) {
+              trailing: PopupMenuButton( //Three dots menu
+                onSelected: (choice) { //If user selects Edit then updateData is called which is _addNewData from main.dart that opens modalBottomSheet with filled details. And if user selects Delete then _deleteData is called.
                   if (choice == 'Edit') {
-                    widget._updateData(context,
+                    widget._updateData(context, 
                         data: widget.data, appId: appId);
                   } else if (choice == 'Delete') {
                     widget._deleteData(appId);

@@ -6,12 +6,14 @@ class FileHandler {
 
   FileHandler(this._jsonFile);
 
+	// If file not present then creates it and adds the first content in it. Called by write2File() when file doesnot exist.
   void _createFile(Map<String, dynamic> content) {
     print('creating file...!');
     _jsonFile.createSync();
     _jsonFile.writeAsStringSync(jsonEncode(content));
   }
 
+	// Writes data to jsonFile
   void write2File(String key, dynamic value) {
     Map<String, dynamic> content = {key: value};
 
@@ -32,6 +34,7 @@ class FileHandler {
     }
   }
 
+	// DeleteData from jsonFile.
 	void deleteData(Map<String, dynamic> content){
 		_jsonFile.writeAsStringSync(jsonEncode(content));
 	}

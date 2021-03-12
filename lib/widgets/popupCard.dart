@@ -12,10 +12,11 @@ class PopUpCard extends StatefulWidget {
 }
 
 class _PopUpCardState extends State<PopUpCard> {
-  String pwdTitle = '----';
+  String pwdTitle = '----'; //It shows this text when the card pops up.
   Map info;
 
-  List<Widget> cardContent() {
+	// returns list of Text that contains all the info of selected app except password. 
+  List<Widget> cardContent() { 
     info = widget.data[widget.id];
 
     List<Widget> lst = [];
@@ -28,6 +29,7 @@ class _PopUpCardState extends State<PopUpCard> {
     return lst;
   }
 
+	// It returns a ListTile of password field which is shown on screen. If user taps it then the decrypt() is called and actual password is shown.
   Widget password() {
     return ListTile(
       leading: Text('Password: '),
@@ -42,6 +44,7 @@ class _PopUpCardState extends State<PopUpCard> {
     );
   }
 
+	// It is the main widget that is given to child of Dialog. It contains a column that calls cardContent and password if present.
   Widget popUpContent() {
     return Container(
         height: 200,
