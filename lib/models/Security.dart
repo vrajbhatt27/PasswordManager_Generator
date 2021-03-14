@@ -29,6 +29,10 @@ Future<String> encrypt(String pwd) async {
   });
   final cryptor = new PlatformStringCryptor();
   File file = File(dir.path + '/' + 'key.pem');
+  if (!file.existsSync()) {
+    var created = await createFile();
+    print(created.toString() + '--> FileCreated');
+  }
   String key = file.readAsStringSync();
   String cipher = await cryptor.encrypt(pwd, key);
   return cipher;

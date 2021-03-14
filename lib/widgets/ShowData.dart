@@ -29,6 +29,7 @@ class _ShowDataState extends State<ShowData> {
         });
   }
 
+	// Shows the toast message.
   void dispToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
