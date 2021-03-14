@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:ui';
 // ignore: unused_import
 import 'dart:async';
 
@@ -37,24 +38,45 @@ class _CalculatorState extends State<Calculator> {
   final globalKey = GlobalKey<ScaffoldState>();
   String exp = '';
   String ans = '';
+  bool isEvaluated = false;
 
   String evaluate() {
     String inp = exp.replaceAll(RegExp(r'x'), '*');
-    var val;
+    String val;
 
     try {
       Parser p = Parser();
       Expression expression = p.parse(inp);
       ContextModel cm = ContextModel();
-      val = expression.evaluate(EvaluationType.REAL, cm);
+      val = (expression.evaluate(EvaluationType.REAL, cm)).toString();
     } catch (e) {
       val = 'Error';
     }
 
-    return val.toString();
+    if (val.endsWith('.0')) {
+      val = val.split('.')[0];
+    }
+
+    return val;
   }
 
   void actionOnButtonPressed(String text) {
+    if (isEvaluated) {
+      isEvaluated = false;
+      setState(() {
+        if (text == '/' ||
+            text == 'x' ||
+            text == '+' ||
+            text == '-' ||
+            text == ' mod ') {
+          exp = ans;
+        } else {
+          exp = '';
+        }
+        ans = '';
+      });
+    }
+
     if (text == "AC") {
       setState(() {
         exp = '';
@@ -73,16 +95,19 @@ class _CalculatorState extends State<Calculator> {
         });
       }
     } else if (text == "=") {
+      isEvaluated = true;
       if (exp == "55") {
         Navigator.of(context).pushNamed(HomePage.routeName);
       } else if (exp == '00') {
+        setState(() {
+          ans = '';
+          exp = '';
+        });
         globalKey.currentState.openEndDrawer();
-      }
-
-      if (exp.contains("mod")) {
-        var lst = exp.split('');
+      } else if (exp.contains("mod")) {
+        var lst = exp.split(' ');
         int n1 = int.parse(lst[0]);
-        int n2 = int.parse(lst[4]);
+        int n2 = int.parse(lst[2]);
         var res = n1 % n2;
         setState(() {
           ans = res.toString();
@@ -111,7 +136,7 @@ class _CalculatorState extends State<Calculator> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            color: Colors.white24),
+            color: Colors.white30),
         child: Text(
           text,
           style: TextStyle(color: Colors.white, fontSize: 26.0),
@@ -123,19 +148,21 @@ class _CalculatorState extends State<Calculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: Text('Calculator'),
-        backgroundColor: Colors.black,
-        actions: [Container()],
-      ),
       key: globalKey,
       endDrawer: Drawer(
-        child: DrawerContent(),
+        child: BackdropFilter(
+          child: DrawerContent(),
+          filter: ImageFilter.blur(
+            sigmaX: 4.5,
+            sigmaY: 4.5,
+          ),
+        ),
+        elevation: 30,
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        color: Colors.black,
+        color: Colors.grey[900],
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: new Column(
@@ -146,13 +173,11 @@ class _CalculatorState extends State<Calculator> {
                 child: Container(
                   height: double.infinity,
                   width: double.infinity,
-                  color: Colors.black,
+                  color: Colors.grey[900],
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(
-                        height: 20,
-                      ),
+                      Flexible(child: Container(), flex: 6),
                       Flexible(
                         fit: FlexFit.tight,
                         flex: 5,
@@ -173,11 +198,11 @@ class _CalculatorState extends State<Calculator> {
                 ),
               ),
               Flexible(
-                flex: 5,
+                flex: 3,
                 child: Container(
                   height: double.infinity,
                   width: double.infinity,
-                  color: Colors.black,
+                  // color: Colors.black,
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -191,7 +216,7 @@ class _CalculatorState extends State<Calculator> {
                             children: <Widget>[
                               Flexible(flex: 1, child: customButton("AC")),
                               Flexible(flex: 1, child: customButton("C")),
-                              Flexible(flex: 1, child: customButton("mod")),
+                              Flexible(flex: 1, child: customButton(" mod ")),
                               Flexible(flex: 1, child: customButton("/"))
                             ],
                           ),
@@ -313,44 +338,64 @@ class _DrawerContentState extends State<DrawerContent> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (ctx, index) {
-        String appId =
-            _data.keys.elementAt(index); //extract the appId from data.
-        String app = _data[appId]['app']; //extract app name from data
-        String subtitle;
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage("assets/Images/drawerbg.png"), fit: BoxFit.cover),
+      ),
+      child: ListView.builder(
+        itemBuilder: (ctx, index) {
+          String appId =
+              _data.keys.elementAt(index); //extract the appId from data.
+          String app = _data[appId]['app']; //extract app name from data
+          String subtitle;
 
-        // Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
-        if (_data[appId].containsKey('email')) {
-          subtitle = _data[appId]['email'];
-        } else if (_data[appId].containsKey('mobile no')) {
-          subtitle = _data[appId]['mobile no'];
-        } else {
-          subtitle = '';
-        }
+          // Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
+          if (_data[appId].containsKey('email')) {
+            subtitle = _data[appId]['email'];
+          } else if (_data[appId].containsKey('mobile no')) {
+            subtitle = _data[appId]['mobile no'];
+          } else {
+            subtitle = '';
+          }
 
-        if (_data[appId].containsKey('password')) {
-          return Card(
-            elevation: 5,
-            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
-            child: ListTile(
-              title: Text(app),
-              subtitle: Text(subtitle),
-              trailing: IconButton(
-                icon: Icon(Icons.copy),
-                onPressed: () async {
-                  String pwd = await decrypt(_data[appId]['password']);
-                  FlutterClipboard.copy(pwd);
-                  dispToast('Password copied to clipboard');
-                },
+          if (_data[appId].containsKey('password')) {
+            return Card(
+              color: Colors.transparent,
+              elevation: 5,
+              margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+              child: ListTile(
+                title: Text(
+                  app,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: 15,
+                  ),
+                ),
+                trailing: IconButton(
+                  color: Colors.white60,
+                  icon: Icon(Icons.copy),
+                  onPressed: () async {
+                    String pwd = await decrypt(_data[appId]['password']);
+                    FlutterClipboard.copy(pwd);
+                    dispToast('Password copied to clipboard');
+                  },
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        return Container();
-      },
-      itemCount: _data.length,
+          return Container();
+        },
+        itemCount: _data.length,
+      ),
     );
   }
 }
