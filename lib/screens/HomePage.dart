@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../widgets/NewData.dart';
 import '../widgets/ShowData.dart';
 import '../models/FileHandler.dart';
+import '../other/styles.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -85,19 +86,53 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Json Demo'),
-      ),
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ShowData(_data, _addNewData, _deleteData,),
-          ], 
+            Container(
+              height: height * 0.2,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.accentColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+              ),
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Your Credentials',
+                style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.backgroundColor),
+              ),
+              alignment: Alignment.bottomLeft,
+            ),
+            Container(
+              height: height * 0.8,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.backgroundColor,
+                    AppColors.backgroundFadedColor,
+                  ],
+                  // stops: [0.0, 1],
+                ),
+              ),
+              child: ShowData(_data, _addNewData, _deleteData),
+            ),
+          ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
+				backgroundColor: AppColors.accentColor,
         child: Icon(Icons.add),
         onPressed: () => _addNewData(context),
       ),
