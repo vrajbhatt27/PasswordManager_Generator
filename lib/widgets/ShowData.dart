@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
@@ -39,8 +41,8 @@ class _ShowDataState extends State<ShowData> {
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
+      backgroundColor: AppColors.popUpCardColor,
+      textColor: AppColors.backgroundColor,
       fontSize: 16.0,
     );
   }
@@ -84,11 +86,15 @@ class _ShowDataState extends State<ShowData> {
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(
+														// It opens the popUpcard with animation.
                             HeroDialogRoute(
                               builder: (context) => Center(
-                                child: PopUpCard(
-                                    data: widget.data,
-                                    id: appId), //AppPopupCard(appId)
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                  child:
+                                      PopUpCard(data: widget.data, id: appId),
+                                ), //AppPopupCard(appId)
                               ),
                             ),
                           );

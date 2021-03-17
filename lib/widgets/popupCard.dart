@@ -22,6 +22,7 @@ class _PopUpCardState extends State<PopUpCard> {
   var width;
   bool isShown = false;
 
+	// Defines how the text is shown on Card.
   Widget showText(String key, String val) {
     key = key.replaceRange(0, 1, key.split('')[0].toUpperCase());
     return Container(

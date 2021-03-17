@@ -22,7 +22,9 @@ class _NewData extends State<NewData> {
   Map<String, String> _appInfo = {};
   bool update = false;
   List<Widget> textFields = [];
-  Map isPressed = {
+  
+	// Used for buttons in bottom sheet. If the textField is present , then to remove it and Vice Versa.
+	Map isPressed = {
     'Email': false,
     'userId': false,
     'Password': false,
@@ -30,6 +32,7 @@ class _NewData extends State<NewData> {
     'Other': false,
   };
 
+	// Checks that if the modal sheet if to be opened for updating data.
   @override
   initState() {
     if (widget.appId.isNotEmpty) {
@@ -104,6 +107,7 @@ class _NewData extends State<NewData> {
     _pwdCtrl.text = pwd;
   }
 
+	// When the modal sheet is used for updating the data this method is called. It creates the textFields with filled content for editing purpose.
   void _forUpdateData() {
     Map info = widget.data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];
@@ -142,6 +146,7 @@ class _NewData extends State<NewData> {
     }
   }
 
+	// Used to display text on bottom sheet. Widget that returns Text.
   Widget showText(String text) {
     return Text(
       text,
@@ -149,6 +154,7 @@ class _NewData extends State<NewData> {
     );
   }
 
+	// Widget that returns TextField.
   Widget buildTextField(String lbl, TextEditingController ctrl) {
     return TextField(
       key: Key(lbl),
@@ -164,6 +170,7 @@ class _NewData extends State<NewData> {
     );
   }
 
+	// It is used to build the buttons in bottom sheet for opening textField.
   List<Widget> buildButtons() {
     var icons = [
       Icons.email,
@@ -217,6 +224,7 @@ class _NewData extends State<NewData> {
     return widLst;
   }
 
+	// On button press it adds the respective textfield in the list.
   void add2List(String lbl, TextEditingController ctrl) {
     setState(() {
       isPressed[lbl] = true;
@@ -224,6 +232,7 @@ class _NewData extends State<NewData> {
     });
   }
 
+	// On pressing the button if the textField is already present, then this removes it from sheet.
   void removeFromList(String lbl) {
     setState(() {
       isPressed[lbl] = false;

@@ -9,6 +9,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import './other/styles.dart';
 import './screens/HomePage.dart';
 import './models/Security.dart';
 
@@ -40,6 +41,7 @@ class _CalculatorState extends State<Calculator> {
   String ans = '';
   bool isEvaluated = false;
 
+	// Evaluates the expression from calculator and returns the ans.
   String evaluate() {
     String inp = exp.replaceAll(RegExp(r'x'), '*');
     String val;
@@ -60,6 +62,7 @@ class _CalculatorState extends State<Calculator> {
     return val;
   }
 
+	// Specifies action for each button on calculator.
   void actionOnButtonPressed(String text) {
     if (isEvaluated) {
       isEvaluated = false;
@@ -96,13 +99,15 @@ class _CalculatorState extends State<Calculator> {
       }
     } else if (text == "=") {
       isEvaluated = true;
-      if (exp == "55") {
+      if (exp == "55") { 
+				// Opens the HomePage.
         Navigator.of(context).pushNamed(HomePage.routeName);
       } else if (exp == '00') {
         setState(() {
           ans = '';
           exp = '';
         });
+				// Opens the drawer for direct password access.
         globalKey.currentState.openEndDrawer();
       } else if (exp.contains("mod")) {
         var lst = exp.split(' ');
@@ -126,6 +131,7 @@ class _CalculatorState extends State<Calculator> {
     }
   }
 
+	// Builds buttons for calculator.
   Widget customButton(String text) {
     return InkWell(
       onTap: () => actionOnButtonPressed(text),
@@ -149,12 +155,12 @@ class _CalculatorState extends State<Calculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
-      endDrawer: Drawer(
+      endDrawer: Drawer( //Opens the drawer for direct password access.
         child: BackdropFilter(
           child: DrawerContent(),
           filter: ImageFilter.blur(
-            sigmaX: 4.5,
-            sigmaY: 4.5,
+            sigmaX: 10,
+            sigmaY: 10,
           ),
         ),
         elevation: 30,
@@ -297,6 +303,8 @@ class _CalculatorState extends State<Calculator> {
   }
 }
 
+
+// Class that shows the drawer content. 
 class DrawerContent extends StatefulWidget {
   @override
   _DrawerContentState createState() => _DrawerContentState();
@@ -325,13 +333,14 @@ class _DrawerContentState extends State<DrawerContent> {
     });
   }
 
+	// Display the toast message when password copied.
   void dispToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
+      backgroundColor: AppColors.popUpCardColor,
+      textColor: AppColors.backgroundColor,
       fontSize: 16.0,
     );
   }
