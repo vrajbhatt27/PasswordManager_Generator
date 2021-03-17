@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool _fexists = false;
   String _fname = 'data.json';
   Map<String, dynamic> _data = {};
+  var height;
 
   // Instantiate the _dir and _file and reads data from jsonFile that are shown on screen.
   @override
@@ -58,20 +59,36 @@ class _HomePageState extends State<HomePage> {
     }
 
     showModalBottomSheet(
-        context: ctx,
-        builder: (bCtx) {
-          return GestureDetector(
-            onTap: () {},
-            child: update
-                ? NewData(
+      context: ctx,
+      isScrollControlled: true,
+      barrierColor: Colors.black54,
+      backgroundColor: Color(0xFF1F2426),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+      ),
+      builder: (bCtx) {
+        return GestureDetector(
+          onTap: () {},
+          child: update
+              ? Container(
+                  height: height * 0.6,
+                  child: NewData(
                     _callWrite2File,
                     data: data,
                     appId: appId,
-                  )
-                : NewData(_callWrite2File),
-            behavior: HitTestBehavior.opaque,
-          );
-        });
+                  ),
+                )
+              : Container(
+                  height: height * 0.6,
+                  child: NewData(_callWrite2File),
+                ),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
   }
 
   // Deletes the given app info and calls deleteData of fileHandler. It also calls setState so that the deleted app info is removed from screen
@@ -86,7 +103,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
@@ -132,7 +149,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-				backgroundColor: AppColors.accentColor,
+        backgroundColor: AppColors.accentColor,
         child: Icon(Icons.add),
         onPressed: () => _addNewData(context),
       ),
