@@ -101,8 +101,37 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Widget showMsgWhenEmptyFile() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          GestureDetector(
+						onTap: () => _addNewData(context), 
+            child: Image.asset(
+              'assets/Images/EmptyFile.png',
+              scale: 2,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Text(
+              'No data present. Start adding your credentials...',
+              style: TextStyle(
+                color: AppColors.popUpCardColor,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool noDataInFile = _data.isEmpty;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -130,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.bottomLeft,
             ),
             Container(
-              height: height * 0.8,
+              height: height * 0.7,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -142,7 +171,9 @@ class _HomePageState extends State<HomePage> {
                   // stops: [0.0, 1],
                 ),
               ),
-              child: ShowData(_data, _addNewData, _deleteData),
+              child: noDataInFile
+                  ? showMsgWhenEmptyFile()
+                  : ShowData(_data, _addNewData, _deleteData),
             ),
           ],
         ),

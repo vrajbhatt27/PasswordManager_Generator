@@ -303,7 +303,6 @@ class _CalculatorState extends State<Calculator> {
   }
 }
 
-
 // Class that shows the drawer content. 
 class DrawerContent extends StatefulWidget {
   @override
