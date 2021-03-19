@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/Security.dart';
+import '../models/passwordGenerator.dart';
 
 class NewData extends StatefulWidget {
   final Function _callWrite2File;
@@ -258,7 +259,7 @@ class _NewData extends State<NewData> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        // crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
             children: [
@@ -293,16 +294,41 @@ class _NewData extends State<NewData> {
           Divider(
             color: Colors.white,
           ),
-          ElevatedButton(
-            onPressed: update ? () => _addData(id: widget.appId) : _addData,
-            child: Text(
-              'Add',
-              style: TextStyle(
-                color: Color(0xff1F2426),
-                fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: isPressed['Password']
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.end,
+            children: [
+							// If the password button is pressed then only the generate password field will be shown.
+              if (isPressed['Password'])
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _pwdCtrl.text = GeneratePassword().generatePassword();
+                    });
+                  },
+                  child: Text(
+                    'Generate Password',
+                    style: TextStyle(
+                      color: Color(0xff1F2426),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
+                ),
+              
+							ElevatedButton(
+                onPressed: update ? () => _addData(id: widget.appId) : _addData,
+                child: Text(
+                  'Add',
+                  style: TextStyle(
+                    color: Color(0xff1F2426),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
               ),
-            ),
-            style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
+            ],
           ),
         ],
       ),

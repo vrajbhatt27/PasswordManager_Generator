@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:path_provider/path_provider.dart';
 
