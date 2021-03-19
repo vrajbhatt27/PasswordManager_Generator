@@ -117,12 +117,12 @@ class _CalculatorState extends State<Calculator> {
         setState(() {
           ans = res.toString();
         });
-        exp = '';
+        // exp = '';
       } else {
         setState(() {
           ans = evaluate();
         });
-        exp = '';
+        // exp = '';
       }
     } else {
       setState(() {
