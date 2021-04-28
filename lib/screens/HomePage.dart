@@ -1,14 +1,18 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:ui';
 // ignore: unused_import
 import 'dart:async';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import '../other/styles.dart';
+import '../widgets/generatePwdCard.dart';
+import '../other/customRectTween.dart';
 import '../widgets/NewData.dart';
 import '../widgets/ShowData.dart';
 import '../models/FileHandler.dart';
-import '../other/styles.dart';
+import '../other/heroDialogRoute.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -107,7 +111,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           GestureDetector(
-						onTap: () => _addNewData(context), 
+            onTap: () => _addNewData(context),
             child: Image.asset(
               'assets/Images/EmptyFile.png',
               scale: 2,
@@ -149,12 +153,55 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               padding: EdgeInsets.all(10),
-              child: Text(
-                'Your Credentials',
-                style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.backgroundColor),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Your Credentials',
+                    style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.backgroundColor),
+                  ),
+                  Hero(
+                    createRectTween: (begin, end) {
+                      return CustomRectTween(begin: begin, end: end);
+                    },
+                    tag: 'menu',
+                    child: Material(
+											color: AppColors.accentColor,
+                      child: PopupMenuButton(
+                        //Three dots menu
+                        onSelected: (choice) {
+                          if (choice == 'Generate Passwords') {
+                            print('Password Generate');
+                            Navigator.of(context).push(
+                              // It opens the popUpcard with animation.
+                              HeroDialogRoute(
+                                builder: (context) => Center(
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10, sigmaY: 10),
+                                    child: GeneratePwdCard(),
+                                  ), //AppPopupCard(appId)
+                                ),
+                              ),
+                            );
+                          } else if (choice == 'Encrypted Messages') {
+                            print('Encrypt Password');
+                          }
+                        },
+                        itemBuilder: (BuildContext ctx) {
+                          return ['Generate Passwords', 'Encrypted Messages']
+                              .map((choice) {
+                            return PopupMenuItem(
+                                child: Text(choice), value: choice);
+                          }).toList();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
               alignment: Alignment.bottomLeft,
             ),
