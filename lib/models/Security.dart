@@ -22,6 +22,10 @@ Future<bool> createFile() async {
 
 // Encrypts the given password
 Future<String> encrypt(String pwd) async {
+  final cryptorx = new PlatformStringCryptor();
+  String x = await cryptorx.generateRandomKey();
+  print('---Key---:$x');
+
   Directory dir;
   await getApplicationDocumentsDirectory().then((Directory directory) {
     dir = directory;
@@ -52,4 +56,22 @@ Future<String> decrypt(String cipher) async {
   } catch (e) {}
 
   return pwd;
+}
+
+Future<String> encryptMsg(String msg) async {
+  String key =
+      "x9sEgxgyUuMCKBgZW3IY4Q==:ojE9OAK8VOaAvGHes5wPvPANrk08SBnSdxn6UdTBOHY=";
+
+  final cryptor = new PlatformStringCryptor();
+  String cipher = await cryptor.encrypt(msg, key);
+  return cipher;
+}
+
+Future<String> decryptMsg(String cipher) async {
+  String key =
+      "x9sEgxgyUuMCKBgZW3IY4Q==:ojE9OAK8VOaAvGHes5wPvPANrk08SBnSdxn6UdTBOHY=";
+
+  final cryptor = new PlatformStringCryptor();
+  String msg = await cryptor.decrypt(cipher, key);
+  return msg;
 }

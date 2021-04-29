@@ -44,75 +44,13 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  pwd = GeneratePassword().generatePassword();
-                });
-              },
-              child: Container(
-                height: 40,
-                // width: 170,
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                margin: EdgeInsets.only(right: 20),
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  pwd,
-                  style: TextStyle(
-                    color: AppColors.popUpCardColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextButton(
-              onPressed: () {
-                FlutterClipboard.copy(pwd);
-                dispToast('Copied To Clipboard');
-              },
-              child: Text(
-                'Copy',
-                style: TextStyle(
-                  color: AppColors.backgroundColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /*
-	
-	SingleChildScrollView(
-      child: Container(
-        height: height * 0.25,
-        width: width * 0.5,
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.popUpCardColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Container(
+            Row(
+              children: [
+                Flexible(
+                  flex: 5,
+                  child: Container(
                     height: 40,
-                    // width: 170,
+                    width: 170,
                     decoration: BoxDecoration(
                       color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -128,15 +66,22 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
                       ),
                     ),
                   ),
-                  IconButton(
+                ),
+                Flexible(
+                  flex: 1,
+                  child: IconButton(
+                    color: AppColors.backgroundColor,
                     icon: Icon(Icons.copy),
                     onPressed: () {
                       FlutterClipboard.copy(pwd);
                       dispToast('Copied To Clipboard');
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
             ),
             TextButton(
               onPressed: () {
@@ -156,9 +101,8 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
           ],
         ),
       ),
-    )
-	
-	 */
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

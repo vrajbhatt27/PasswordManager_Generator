@@ -13,7 +13,7 @@ import '../widgets/NewData.dart';
 import '../widgets/ShowData.dart';
 import '../models/FileHandler.dart';
 import '../other/heroDialogRoute.dart';
-
+import '../widgets/secMsgCard.dart';
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
   @override
@@ -189,6 +189,18 @@ class _HomePageState extends State<HomePage> {
                             );
                           } else if (choice == 'Encrypted Messages') {
                             print('Encrypt Password');
+                            Navigator.of(context).push(
+                              // It opens the popUpcard with animation.
+                              HeroDialogRoute(
+                                builder: (context) => Center(
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10, sigmaY: 10),
+                                    child: SecretMsgCard(),
+                                  ), //AppPopupCard(appId)
+                                ),
+                              ),
+                            );
                           }
                         },
                         itemBuilder: (BuildContext ctx) {
