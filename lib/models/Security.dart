@@ -22,10 +22,6 @@ Future<bool> createFile() async {
 
 // Encrypts the given password
 Future<String> encrypt(String pwd) async {
-  final cryptorx = new PlatformStringCryptor();
-  String x = await cryptorx.generateRandomKey();
-  print('---Key---:$x');
-
   Directory dir;
   await getApplicationDocumentsDirectory().then((Directory directory) {
     dir = directory;

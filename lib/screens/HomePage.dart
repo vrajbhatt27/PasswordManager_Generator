@@ -14,6 +14,7 @@ import '../widgets/ShowData.dart';
 import '../models/FileHandler.dart';
 import '../other/heroDialogRoute.dart';
 import '../widgets/secMsgCard.dart';
+
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
   @override
@@ -163,53 +164,55 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         color: AppColors.backgroundColor),
                   ),
-                  Hero(
-                    createRectTween: (begin, end) {
-                      return CustomRectTween(begin: begin, end: end);
-                    },
-                    tag: 'menu',
-                    child: Material(
-											color: AppColors.accentColor,
-                      child: PopupMenuButton(
-                        //Three dots menu
-                        onSelected: (choice) {
-                          if (choice == 'Generate Passwords') {
-                            print('Password Generate');
-                            Navigator.of(context).push(
-                              // It opens the popUpcard with animation.
-                              HeroDialogRoute(
-                                builder: (context) => Center(
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 10, sigmaY: 10),
-                                    child: GeneratePwdCard(),
-                                  ), //AppPopupCard(appId)
+                  Expanded(
+                    child: Hero(
+                      createRectTween: (begin, end) {
+                        return CustomRectTween(begin: begin, end: end);
+                      },
+                      tag: 'menu',
+                      child: Material(
+                        color: AppColors.accentColor,
+                        child: PopupMenuButton(
+                          //Three dots menu
+                          onSelected: (choice) {
+                            if (choice == 'Generate Passwords') {
+                              print('Password Generate');
+                              Navigator.of(context).push(
+                                // It opens the popUpcard with animation.
+                                HeroDialogRoute(
+                                  builder: (context) => Center(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 10, sigmaY: 10),
+                                      child: GeneratePwdCard(),
+                                    ), //AppPopupCard(appId)
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else if (choice == 'Encrypted Messages') {
-                            print('Encrypt Password');
-                            Navigator.of(context).push(
-                              // It opens the popUpcard with animation.
-                              HeroDialogRoute(
-                                builder: (context) => Center(
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 10, sigmaY: 10),
-                                    child: SecretMsgCard(),
-                                  ), //AppPopupCard(appId)
+                              );
+                            } else if (choice == 'Encrypted Messages') {
+                              print('Encrypt Password');
+                              Navigator.of(context).push(
+                                // It opens the popUpcard with animation.
+                                HeroDialogRoute(
+                                  builder: (context) => Center(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 10, sigmaY: 10),
+                                      child: SecretMsgCard(),
+                                    ), //AppPopupCard(appId)
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                        },
-                        itemBuilder: (BuildContext ctx) {
-                          return ['Generate Passwords', 'Encrypted Messages']
-                              .map((choice) {
-                            return PopupMenuItem(
-                                child: Text(choice), value: choice);
-                          }).toList();
-                        },
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext ctx) {
+                            return ['Generate Passwords', 'Encrypted Messages']
+                                .map((choice) {
+                              return PopupMenuItem(
+                                  child: Text(choice), value: choice);
+                            }).toList();
+                          },
+                        ),
                       ),
                     ),
                   ),
