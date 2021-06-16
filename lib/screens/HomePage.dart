@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                           //Three dots menu
                           onSelected: (choice) {
                             if (choice == 'Generate Passwords') {
-                              print('Password Generate');
+                              print('Password Generate ');
                               Navigator.of(context).push(
                                 // It opens the popUpcard with animation.
                                 HeroDialogRoute(
