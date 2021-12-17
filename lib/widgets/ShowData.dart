@@ -80,7 +80,7 @@ class _ShowDataState extends State<ShowData> {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       decoration: BoxDecoration(
-                        //! #1 change card color
+                        //! ### change card color
                         color: AppColors.bgtColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -105,13 +105,13 @@ class _ShowDataState extends State<ShowData> {
                           child: Text(
                             app.split('')[0],
                             style: TextStyle(
-                              //! #2 change letter color in circle avater
+                              //! ### change letter color in circle avater
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 22,
                             ),
                           ),
-                          //! #3 change bg color in circle avater
+                          //! ### change bg color in circle avater
                           backgroundColor: AppColors.backgroundColor,
                         ),
                         title: Text(
@@ -158,7 +158,7 @@ class _ShowDataState extends State<ShowData> {
                   Divider(
                     color: Colors.white,
                     indent: 80,
-                    thickness: 0.1,
+                    thickness: 0.2,
                     endIndent: 80,
                   ),
                 ],

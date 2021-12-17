@@ -67,7 +67,9 @@ class _HomePageState extends State<HomePage> {
       context: ctx,
       isScrollControlled: true,
       barrierColor: Colors.black54,
-      backgroundColor: Color(0xFF1F2426),
+			//! ### modal bottom sheet bg color
+      // backgroundColor: Color(0xFF1F2426),
+      backgroundColor: AppColors.backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),

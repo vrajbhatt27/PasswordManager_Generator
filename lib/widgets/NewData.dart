@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/other/styles.dart';
 import '../models/Security.dart';
 import '../models/passwordGenerator.dart';
 
@@ -198,41 +199,47 @@ class _NewData extends State<NewData> {
     List<Widget> widLst = [];
 
     for (var i = 0; i < 5; i++) {
-      widLst.add(InkWell(
-        onTap: () {
-          String name;
-          TextEditingController ctrl;
-          if (names[i] == 'Email') {
-            name = names[i];
-            ctrl = _emailCtrl;
-          } else if (names[i] == 'userId') {
-            name = names[i];
-            ctrl = _unameCtrl;
-          } else if (names[i] == 'Password') {
-            name = names[i];
-            ctrl = _pwdCtrl;
-          } else if (names[i] == 'Mobile No') {
-            name = names[i];
-            ctrl = _mnoCtrl;
-          } else if (names[i] == 'Other') {
-            name = names[i];
-            ctrl = _otherCtrl;
-          }
+      widLst.add(
+        InkWell(
+          onTap: () {
+            String name;
+            TextEditingController ctrl;
+            if (names[i] == 'Email') {
+              name = names[i];
+              ctrl = _emailCtrl;
+            } else if (names[i] == 'userId') {
+              name = names[i];
+              ctrl = _unameCtrl;
+            } else if (names[i] == 'Password') {
+              name = names[i];
+              ctrl = _pwdCtrl;
+            } else if (names[i] == 'Mobile No') {
+              name = names[i];
+              ctrl = _mnoCtrl;
+            } else if (names[i] == 'Other') {
+              name = names[i];
+              ctrl = _otherCtrl;
+            }
 
-          if (isPressed[name] == false)
-            add2List(name, ctrl);
-          else {
-            setState(() {
-              ctrl.text = '';
-            });
-            removeFromList(name);
-          }
-        },
-        child: CircleAvatar(
-          child: Icon(icons[i]),
-          backgroundColor: Color(0xffffe5b4),
+            if (isPressed[name] == false)
+              add2List(name, ctrl);
+            else {
+              setState(() {
+                ctrl.text = '';
+              });
+              removeFromList(name);
+            }
+          },
+          child: CircleAvatar(
+            child: Icon(
+              icons[i],
+							//! ### App icon colors
+              color: AppColors.backgroundColor,
+            ),
+            backgroundColor: Color(0xffffe5b4),
+          ),
         ),
-      ));
+      );
     }
 
     return widLst;
@@ -299,7 +306,7 @@ class _NewData extends State<NewData> {
                 ? MainAxisAlignment.spaceBetween
                 : MainAxisAlignment.end,
             children: [
-							// If the password button is pressed then only the generate password field will be shown.
+              // If the password button is pressed then only the generate password field will be shown.
               if (isPressed['Password'])
                 ElevatedButton(
                   onPressed: () {
@@ -316,13 +323,14 @@ class _NewData extends State<NewData> {
                   ),
                   style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
                 ),
-              
-							ElevatedButton(
+
+              ElevatedButton(
                 onPressed: update ? () => _addData(id: widget.appId) : _addData,
                 child: Text(
                   'Add',
                   style: TextStyle(
-                    color: Color(0xff1F2426),
+                    //! ### Color for text: Add
+                    color: AppColors.backgroundColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
