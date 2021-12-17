@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
             child: Text(
               'No data present. Start adding your credentials...',
               style: TextStyle(
-                color: AppColors.popUpCardColor,
+                color: Colors.white,
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
@@ -143,26 +143,31 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // app bar
             Container(
-              height: height * 0.2,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.accentColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                ),
-              ),
-              padding: EdgeInsets.all(10),
+              // height: height * 0.2,
+              // width: double.infinity,
+              // decoration: BoxDecoration(
+              //   color: AppColors.accentColor,
+              //   borderRadius: BorderRadius.only(
+              //     bottomLeft: Radius.circular(16),
+              //     bottomRight: Radius.circular(16),
+              //   ),
+              // ),
+              margin: EdgeInsets.fromLTRB(10, 50, 0, 5),
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Your Credentials',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.backgroundColor),
+                  Expanded(
+                    flex: 6,
+                    child: Text(
+                      'Credentials',
+                      style: TextStyle(
+                          fontSize: 55,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
                   Expanded(
                     child: Hero(
@@ -171,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       tag: 'menu',
                       child: Material(
-                        color: AppColors.accentColor,
+                        color: AppColors.backgroundColor,
                         child: PopupMenuButton(
                           //Three dots menu
                           onSelected: (choice) {
@@ -213,6 +218,7 @@ class _HomePageState extends State<HomePage> {
                             }).toList();
                           },
                         ),
+                        // ),
                       ),
                     ),
                   ),
@@ -220,19 +226,22 @@ class _HomePageState extends State<HomePage> {
               ),
               alignment: Alignment.bottomLeft,
             ),
+
+            // main body
             Container(
               height: height * 0.7,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.backgroundColor,
-                    AppColors.backgroundFadedColor,
-                  ],
-                  // stops: [0.0, 1],
-                ),
-              ),
+              color: AppColors.backgroundColor,
+              // decoration: BoxDecoration(
+              //   gradient: LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [
+              //       AppColors.backgroundColor,
+              //       AppColors.backgroundFadedColor,
+              //     ],
+              //     // stops: [0.0, 1],
+              //   ),
+              // ),
               child: noDataInFile
                   ? showMsgWhenEmptyFile()
                   : ShowData(_data, _addNewData, _deleteData),
@@ -242,8 +251,12 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.accentColor,
-        child: Icon(Icons.add),
+        backgroundColor: AppColors.bgtColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 40,
+        ),
         onPressed: () => _addNewData(context),
       ),
     );

@@ -80,13 +80,14 @@ class _ShowDataState extends State<ShowData> {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.cardColor,
+                        //! #1 change card color
+                        color: AppColors.bgtColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(
-														// It opens the popUpcard with animation.
+                            // It opens the popUpcard with animation.
                             HeroDialogRoute(
                               builder: (context) => Center(
                                 child: BackdropFilter(
@@ -104,12 +105,14 @@ class _ShowDataState extends State<ShowData> {
                           child: Text(
                             app.split('')[0],
                             style: TextStyle(
-                              color: AppColors.backgroundColor,
+                              //! #2 change letter color in circle avater
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 22,
                             ),
                           ),
-                          backgroundColor: AppColors.accentColor,
+                          //! #3 change bg color in circle avater
+                          backgroundColor: AppColors.backgroundColor,
                         ),
                         title: Text(
                           app,
@@ -152,7 +155,12 @@ class _ShowDataState extends State<ShowData> {
                       ),
                     ),
                   ),
-                  Divider(color: AppColors.popUpCardColor),
+                  Divider(
+                    color: Colors.white,
+                    indent: 80,
+                    thickness: 0.1,
+                    endIndent: 80,
+                  ),
                 ],
               ),
             ),

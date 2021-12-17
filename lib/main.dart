@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+			theme: ThemeData.dark(),
       home: Calculator(),
       routes: {
         HomePage.routeName: (ctx) => HomePage(),
@@ -101,7 +102,8 @@ class _CalculatorState extends State<Calculator> {
       isEvaluated = true;
       if (exp == "55") { 
 				// Opens the HomePage.
-        Navigator.of(context).pushNamed(HomePage.routeName);
+        // Navigator.of(context).pushNamed(HomePage.routeName);
+        Navigator.of(context).popAndPushNamed(HomePage.routeName);
       } else if (exp == '00') {
         setState(() {
           ans = '';
