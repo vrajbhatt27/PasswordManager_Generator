@@ -77,23 +77,26 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       builder: (bCtx) {
-        return GestureDetector(
-          onTap: () {},
-          child: update
-              ? Container(
-                  height: height * 0.7,
-                  child: NewData(
-                    _callWrite2File,
-                    data: data,
-                    appId: appId,
-                  ),
-                )
-              : Container(
-                  height: height * 0.7,
-                  child: NewData(_callWrite2File),
-                ),
-          behavior: HitTestBehavior.opaque,
-        );
+        return BackdropFilter(
+					filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
+					child: GestureDetector(
+						onTap: () {},
+						child: update
+								? Container(
+										height: height * 0.7,
+										child: NewData(
+											_callWrite2File,
+											data: data,
+											appId: appId,
+										),
+									)
+								: Container(
+										height: height * 0.7,
+										child: NewData(_callWrite2File),
+									),
+						behavior: HitTestBehavior.opaque,
+					),
+				);
       },
     );
   }
