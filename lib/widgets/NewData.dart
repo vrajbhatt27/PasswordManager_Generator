@@ -20,7 +20,11 @@ class _NewData extends State<NewData> {
   TextEditingController _pwdCtrl = TextEditingController();
   TextEditingController _mnoCtrl = TextEditingController();
   TextEditingController _otherCtrl = TextEditingController();
-
+  FocusNode _emailFocusNode = FocusNode();
+  FocusNode _unameFocusNode = FocusNode();
+  FocusNode _pwdFocusNode = FocusNode();
+  FocusNode _mnoFocusNode = FocusNode();
+  FocusNode _otherFocusNode = FocusNode();
   Map<String, String> _appInfo = {};
   bool update = false;
   List<Widget> textFields = [];
@@ -42,6 +46,22 @@ class _NewData extends State<NewData> {
       _forUpdateData();
     }
     super.initState();
+  }
+
+  dispose() {
+    _appCtrl.dispose();
+    _emailCtrl.dispose();
+    _pwdCtrl.dispose();
+    _unameCtrl.dispose();
+    _mnoCtrl.dispose();
+    _otherCtrl.dispose();
+
+    _emailFocusNode.dispose();
+    _unameFocusNode.dispose();
+    _pwdFocusNode.dispose();
+    _mnoFocusNode.dispose();
+    _otherFocusNode.dispose();
+    super.dispose();
   }
 
   // returns a unique id for appId:appInfo in jsonFile. This acts as appId.
@@ -147,7 +167,8 @@ class _NewData extends State<NewData> {
     }
 
     for (var i = 0; i < fillContentNames.length; i++) {
-      textFields.add(buildTextField(fillContentNames[i], fillContentCtrl[i]));
+      textFields
+          .add(buildTextField(fillContentNames[i], fillContentCtrl[i], null));
       isPressed[fillContentNames[i]] = true;
     }
   }
@@ -161,7 +182,7 @@ class _NewData extends State<NewData> {
   }
 
   // Widget that returns TextField.
-  Widget buildTextField(String lbl, TextEditingController ctrl) {
+  Widget buildTextField(String lbl, TextEditingController ctrl, FocusNode fn) {
     TextInputType keyboard;
 
     if (lbl == 'Email') {
@@ -172,6 +193,7 @@ class _NewData extends State<NewData> {
 
     return TextField(
       key: Key(lbl),
+      focusNode: fn,
       controller: ctrl,
       keyboardType: (keyboard == null) ? null : keyboard,
       style: TextStyle(color: Colors.white, fontSize: 18),
@@ -197,6 +219,7 @@ class _NewData extends State<NewData> {
 
     var names = ['Email', 'userId', 'Password', 'Mobile No', 'Other'];
     List<Widget> widLst = [];
+    FocusNode fn;
 
     for (var i = 0; i < 5; i++) {
       widLst.add(
@@ -207,22 +230,27 @@ class _NewData extends State<NewData> {
             if (names[i] == 'Email') {
               name = names[i];
               ctrl = _emailCtrl;
+              fn = _emailFocusNode;
             } else if (names[i] == 'userId') {
               name = names[i];
               ctrl = _unameCtrl;
+              fn = _unameFocusNode;
             } else if (names[i] == 'Password') {
               name = names[i];
               ctrl = _pwdCtrl;
+              fn = _pwdFocusNode;
             } else if (names[i] == 'Mobile No') {
               name = names[i];
               ctrl = _mnoCtrl;
+              fn = _mnoFocusNode;
             } else if (names[i] == 'Other') {
               name = names[i];
               ctrl = _otherCtrl;
+              fn = _otherFocusNode;
             }
 
             if (isPressed[name] == false)
-              add2List(name, ctrl);
+              add2List(name, ctrl, fn);
             else {
               setState(() {
                 ctrl.text = '';
@@ -233,7 +261,7 @@ class _NewData extends State<NewData> {
           child: CircleAvatar(
             child: Icon(
               icons[i],
-							//! ### App icon colors
+              //! ### App icon colors
               color: AppColors.backgroundColor,
             ),
             backgroundColor: Color(0xffffe5b4),
@@ -246,10 +274,11 @@ class _NewData extends State<NewData> {
   }
 
   // On button press it adds the respective textfield in the list.
-  void add2List(String lbl, TextEditingController ctrl) {
+  void add2List(String lbl, TextEditingController ctrl, FocusNode fn) {
     setState(() {
       isPressed[lbl] = true;
-      textFields.add(buildTextField(lbl, ctrl));
+      textFields.add(buildTextField(lbl, ctrl, fn));
+      fn.requestFocus();
     });
   }
 
@@ -263,82 +292,94 @@ class _NewData extends State<NewData> {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
+      padding: mediaQueryData.viewInsets,
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          padding:
+              const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+          // margin: EdgeInsets.only(bottom: 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              showText('App: '),
-              SizedBox(width: 5),
-              Expanded(
-                child: TextField(
-                  controller: _appCtrl,
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: buildButtons(),
-          ),
-          Divider(
-            color: Colors.white,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: textFields,
-              ),
-            ),
-          ),
-          Divider(
-            color: Colors.white,
-          ),
-          Row(
-            mainAxisAlignment: isPressed['Password']
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.end,
-            children: [
-              // If the password button is pressed then only the generate password field will be shown.
-              if (isPressed['Password'])
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _pwdCtrl.text = GeneratePassword().generatePassword();
-                    });
-                  },
-                  child: Text(
-                    'Generate Password',
-                    style: TextStyle(
-                      color: Color(0xff1F2426),
-                      fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  showText('App: '),
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: TextField(
+                      controller: _appCtrl,
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white))),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
-                ),
-
-              ElevatedButton(
-                onPressed: update ? () => _addData(id: widget.appId) : _addData,
-                child: Text(
-                  'Add',
-                  style: TextStyle(
-                    //! ### Color for text: Add
-                    color: AppColors.backgroundColor,
-                    fontWeight: FontWeight.bold,
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: buildButtons(),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: textFields,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              Row(
+                mainAxisAlignment: isPressed['Password']
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.end,
+                children: [
+                  // If the password button is pressed then only the generate password field will be shown.
+                  if (isPressed['Password'])
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _pwdCtrl.text = GeneratePassword().generatePassword();
+                        });
+                      },
+                      child: Text(
+                        'Generate Password',
+                        style: TextStyle(
+                          color: Color(0xff1F2426),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style:
+                          ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
+                    ),
+
+                  ElevatedButton(
+                    onPressed:
+                        update ? () => _addData(id: widget.appId) : _addData,
+                    child: Text(
+                      'Add',
+                      style: TextStyle(
+                        //! ### Color for text: Add
+                        color: AppColors.backgroundColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

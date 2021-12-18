@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           onTap: () {},
           child: update
               ? Container(
-                  height: height * 0.6,
+                  height: height * 0.7,
                   child: NewData(
                     _callWrite2File,
                     data: data,
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )
               : Container(
-                  height: height * 0.6,
+                  height: height * 0.7,
                   child: NewData(_callWrite2File),
                 ),
           behavior: HitTestBehavior.opaque,
