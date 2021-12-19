@@ -1,6 +1,8 @@
+// @dart=2.9
+import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:encrypt/encrypt.dart' as crypto;
 
 // If not present creates new file key.pem and sets a key. If file is present then used to set new key.
 Future<bool> createFile() async {
@@ -8,66 +10,83 @@ Future<bool> createFile() async {
   File file;
 
   dir = await getApplicationDocumentsDirectory();
-  file = File(dir.path + '/' + 'key.pem');
+  file = File(dir.path + '/' + 'credentials.json');
   if (!file.existsSync()) {
     file.createSync();
   }
+  final key = crypto.Key.fromUtf8('#E6@O`Xp9fD4T(,!^"w:l!V81sMFca2l');
+  final iv = crypto.IV.fromLength(16);
 
-  final cryptor = new PlatformStringCryptor();
-  final String key = await cryptor.generateRandomKey();
-  file.writeAsStringSync(key);
+  Map data = {'key': key.base64, 'iv': iv.base64};
 
+  file.writeAsStringSync(jsonEncode(data));
   return true;
 }
 
 // Encrypts the given password
-Future<String> encrypt(String pwd) async {
+Future encrypt(String pwd) async {
   Directory dir;
-  await getApplicationDocumentsDirectory().then((Directory directory) {
-    dir = directory;
-  });
-  final cryptor = new PlatformStringCryptor();
-  File file = File(dir.path + '/' + 'key.pem');
+  dir = await getApplicationDocumentsDirectory();
+  File file = File(dir.path + '/' + 'credentials.json');
   if (!file.existsSync()) {
     var created = await createFile();
+    // ignore: avoid_print
     print(created.toString() + '--> FileCreated');
   }
-  String key = file.readAsStringSync();
-  String cipher = await cryptor.encrypt(pwd, key);
+
+  String content = file.readAsStringSync();
+  Map data = jsonDecode(content);
+
+  print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+  print(data);
+  print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+  final key = crypto.Key.fromBase64(data['key']);
+  final iv = crypto.IV.fromBase64(data['iv']);
+
+  final encryptor = crypto.Encrypter(crypto.AES(key));
+
+  String cipher = encryptor.encrypt(pwd, iv: iv).base64;
+  print(cipher);
   return cipher;
 }
 
 // Decrypts the given password
-Future<String> decrypt(String cipher) async {
+Future decrypt(String cipher) async {
   Directory dir;
-  await getApplicationDocumentsDirectory().then((Directory directory) {
-    dir = directory;
-  });
-  final cryptor = new PlatformStringCryptor();
-  File file = File(dir.path + '/' + 'key.pem');
-  String key = file.readAsStringSync();
-  String pwd;
-  try {
-    pwd = await cryptor.decrypt(cipher, key);
-  } catch (e) {}
+  dir = await getApplicationDocumentsDirectory();
+  File file = File(dir.path + '/' + 'credentials.json');
 
+  String content = file.readAsStringSync();
+  Map data = jsonDecode(content);
+
+  final key = crypto.Key.fromBase64(data['key']);
+  final iv = crypto.IV.fromBase64(data['iv']);
+
+  final encryptor = crypto.Encrypter(crypto.AES(key));
+
+  crypto.Encrypted e = crypto.Encrypted.fromBase64(cipher);
+
+  String pwd = encryptor.decrypt(e, iv: iv);
+  print(pwd);
   return pwd;
 }
 
 Future<String> encryptMsg(String msg) async {
-  String key =
-      "x9sEgxgyUuMCKBgZW3IY4Q==:ojE9OAK8VOaAvGHes5wPvPANrk08SBnSdxn6UdTBOHY=";
-
-  final cryptor = new PlatformStringCryptor();
-  String cipher = await cryptor.encrypt(msg, key);
+  final key =
+      crypto.Key.fromBase64("I0U2QE9gWHA5ZkQ0VCgsIV4idzpsIVY4MXNNRmNhMmw=");
+  final iv = crypto.IV.fromBase64("AAAAAAAAAAAAAAAAAAAAAA==");
+  final encryptor = crypto.Encrypter(crypto.AES(key));
+  String cipher = encryptor.encrypt(msg, iv: iv).base64;
   return cipher;
 }
 
 Future<String> decryptMsg(String cipher) async {
-  String key =
-      "x9sEgxgyUuMCKBgZW3IY4Q==:ojE9OAK8VOaAvGHes5wPvPANrk08SBnSdxn6UdTBOHY=";
-
-  final cryptor = new PlatformStringCryptor();
-  String msg = await cryptor.decrypt(cipher, key);
+  final key =
+      crypto.Key.fromBase64("I0U2QE9gWHA5ZkQ0VCgsIV4idzpsIVY4MXNNRmNhMmw=");
+  final iv = crypto.IV.fromBase64("AAAAAAAAAAAAAAAAAAAAAA==");
+  final encryptor = crypto.Encrypter(crypto.AES(key));
+	crypto.Encrypted e = crypto.Encrypted.fromBase64(cipher);
+  String msg = encryptor.decrypt(e, iv: iv);
   return msg;
 }
