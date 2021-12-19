@@ -84,74 +84,76 @@ class _ShowDataState extends State<ShowData> {
                         color: AppColors.bgtColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            // It opens the popUpcard with animation.
-                            HeroDialogRoute(
-                              builder: (context) => Center(
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                  child:
-                                      PopUpCard(data: widget.data, id: appId),
-                                ), //AppPopupCard(appId)
+                      child: Dismissible(
+                        key: Key(appId),
+                        background: Container(color: AppColors.accentColor),
+                        onDismissed: (direction) {
+                          setState(() {
+                            widget._deleteData(appId);
+                          });
+                          dispToast("Deleted Successfully");
+                        },
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              // It opens the popUpcard with animation.
+                              HeroDialogRoute(
+                                builder: (context) => Center(
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10, sigmaY: 10),
+                                    child:
+                                        PopUpCard(data: widget.data, id: appId),
+                                  ), //AppPopupCard(appId)
+                                ),
+                              ),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            radius: 27,
+                            child: Text(
+                              app.split('')[0],
+                              style: TextStyle(
+                                //! ### change letter color in circle avater
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 22,
                               ),
                             ),
-                          );
-                        },
-                        leading: CircleAvatar(
-                          radius: 27,
-                          child: Text(
-                            app.split('')[0],
-                            style: TextStyle(
-                              //! ### change letter color in circle avater
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 22,
-                            ),
+                            //! ### change bg color in circle avater
+                            backgroundColor: AppColors.backgroundColor,
                           ),
-                          //! ### change bg color in circle avater
-                          backgroundColor: AppColors.backgroundColor,
-                        ),
-                        title: Text(
-                          app,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          subtitle,
-                          style: TextStyle(
-                              fontSize: 14, fontStyle: FontStyle.italic),
-                        ),
-                        trailing: PopupMenuButton(
-                          //Three dots menu
-                          onSelected: (choice) {
-                            //If user selects Edit then updateData is called which is _addNewData from main.dart that opens modalBottomSheet with filled details. And if user selects Delete then _deleteData is called.
-                            if (choice == 'Edit') {
+                          title: Text(
+                            app,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            subtitle,
+                            style: TextStyle(
+                                fontSize: 14, fontStyle: FontStyle.italic),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
                               widget._updateData(context,
                                   data: widget.data, appId: appId);
-                            } else if (choice == 'Delete') {
-                              widget._deleteData(appId);
+                            },
+                          ),
+                          onLongPress: () async {
+                            if (widget.data[appId].containsKey('password')) {
+                              String pwd =
+                                  await decrypt(widget.data[appId]['password']);
+                              FlutterClipboard.copy(pwd);
+                              dispToast('Password copied to clipboard');
+                            } else {
+                              dispToast('Password Not available');
                             }
                           },
-                          itemBuilder: (BuildContext ctx) {
-                            return ['Edit', 'Delete'].map((choice) {
-                              return PopupMenuItem(
-                                  child: Text(choice), value: choice);
-                            }).toList();
-                          },
                         ),
-                        onLongPress: () async {
-                          if (widget.data[appId].containsKey('password')) {
-                            String pwd =
-                                await decrypt(widget.data[appId]['password']);
-                            FlutterClipboard.copy(pwd);
-                            dispToast('Password copied to clipboard');
-                          } else {
-                            dispToast('Password Not available');
-                          }
-                        },
                       ),
                     ),
                   ),
@@ -171,3 +173,26 @@ class _ShowDataState extends State<ShowData> {
     );
   }
 }
+
+/*
+PopupMenuButton(
+                            //Three dots menu
+                            onSelected: (choice) {
+                              //If user selects Edit then updateData is called which is _addNewData from main.dart that opens modalBottomSheet with filled details. And if user selects Delete then _deleteData is called.
+                              if (choice == 'Edit') {
+                                widget._updateData(context,
+                                    data: widget.data, appId: appId);
+                              } else if (choice == 'Delete') {
+                                widget._deleteData(appId);
+                              }
+                            },
+                            itemBuilder: (BuildContext ctx) {
+                              return ['Edit', 'Delete'].map((choice) {
+                                return PopupMenuItem(
+                                    child: Text(choice), value: choice);
+                              }).toList();
+                            },
+                          )
+
+
+ */
