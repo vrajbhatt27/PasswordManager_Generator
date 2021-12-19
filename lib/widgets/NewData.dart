@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/other/styles.dart';
 import '../models/Security.dart';
-import '../models/passwordGenerator.dart';
 
 class NewData extends StatefulWidget {
   final Function _callWrite2File;
@@ -20,6 +19,7 @@ class _NewData extends State<NewData> {
   TextEditingController _pwdCtrl = TextEditingController();
   TextEditingController _mnoCtrl = TextEditingController();
   TextEditingController _otherCtrl = TextEditingController();
+  FocusNode _appFocusNode = FocusNode();
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _unameFocusNode = FocusNode();
   FocusNode _pwdFocusNode = FocusNode();
@@ -27,6 +27,7 @@ class _NewData extends State<NewData> {
   FocusNode _otherFocusNode = FocusNode();
   Map<String, String> _appInfo = {};
   bool update = false;
+  bool validated = true;
   List<Widget> textFields = [];
 
   // Used for buttons in bottom sheet. If the textField is present , then to remove it and Vice Versa.
@@ -44,6 +45,8 @@ class _NewData extends State<NewData> {
     if (widget.appId.isNotEmpty) {
       update = true;
       _forUpdateData();
+    } else {
+      _appFocusNode.requestFocus();
     }
     super.initState();
   }
@@ -316,10 +319,15 @@ class _NewData extends State<NewData> {
                   Expanded(
                     child: TextField(
                       controller: _appCtrl,
+                      focusNode: _appFocusNode,
                       style: TextStyle(color: Colors.white, fontSize: 18),
                       decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white))),
+                        hintText: validated ? null : 'Please Enter App Name',
+                        hintStyle: TextStyle(color: Colors.red, fontSize: 22),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -343,32 +351,20 @@ class _NewData extends State<NewData> {
                 color: Colors.white,
               ),
               Row(
-                mainAxisAlignment: isPressed['Password']
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // If the password button is pressed then only the generate password field will be shown.
-                  if (isPressed['Password'])
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _pwdCtrl.text = GeneratePassword().generatePassword();
-                        });
-                      },
-                      child: Text(
-                        'Generate Password',
-                        style: TextStyle(
-                          color: Color(0xff1F2426),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xffffe5b4)),
-                    ),
-
                   ElevatedButton(
-                    onPressed:
-                        update ? () => _addData(id: widget.appId) : _addData,
+                    onPressed: update
+                        ? () => _addData(id: widget.appId)
+                        : () {
+                            if (_appCtrl.text.isNotEmpty) {
+                              _addData();
+                            } else {
+                              setState(() {
+                                validated = false;
+                              });
+                            }
+                          },
                     child: Text(
                       'Add',
                       style: TextStyle(
