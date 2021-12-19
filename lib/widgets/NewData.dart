@@ -86,7 +86,12 @@ class _NewData extends State<NewData> {
   void _addData({String id = ''}) async {
     String pwd = _pwdCtrl.text;
     String encPwd;
-    if (pwd.isNotEmpty) encPwd = await encrypt(pwd);
+
+    if (pwd.isNotEmpty) {
+      encPwd = await encrypt(pwd);
+    } else {
+      encPwd = '';
+    }
 
     print('(In NewData)cipher text--> ' + encPwd.toString());
 
@@ -106,7 +111,7 @@ class _NewData extends State<NewData> {
       _appCtrl.text,
       _emailCtrl.text,
       _unameCtrl.text,
-      if (encPwd != null) encPwd,
+      encPwd,
       _mnoCtrl.text,
       _otherCtrl.text,
     ];
@@ -184,7 +189,6 @@ class _NewData extends State<NewData> {
   // Widget that returns TextField.
   Widget buildTextField(String lbl, TextEditingController ctrl, FocusNode fn) {
     TextInputType keyboard;
-
     if (lbl == 'Email') {
       keyboard = TextInputType.emailAddress;
     } else if (lbl == 'Mobile No') {
