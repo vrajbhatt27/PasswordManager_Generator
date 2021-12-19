@@ -35,7 +35,7 @@ import 'package:flutter/painting.dart';
 
 abstract class AppColors {
   /// Dark background color.
-  static const Color backgroundColor = Color(0xFF1F1F1F);
+  static const Color backgroundColor = Color(0xFF1F1F1F); //0xFF000000
   static const Color bgtColor = Color(0xFF2C2D31); //0xFF2E2F33
 
   /// Color used for cards and surfaces.

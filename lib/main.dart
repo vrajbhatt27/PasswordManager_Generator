@@ -144,7 +144,7 @@ class _CalculatorState extends State<Calculator> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            color: Colors.white30),
+            color: AppColors.bgtColor),
         child: Text(
           text,
           style: TextStyle(color: Colors.white, fontSize: 26.0),
@@ -170,7 +170,7 @@ class _CalculatorState extends State<Calculator> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        color: Colors.grey[900],
+        color: AppColors.backgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: new Column(
@@ -181,7 +181,7 @@ class _CalculatorState extends State<Calculator> {
                 child: Container(
                   height: double.infinity,
                   width: double.infinity,
-                  color: Colors.grey[900],
+                  color: AppColors.backgroundColor,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
