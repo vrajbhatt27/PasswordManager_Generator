@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_app/providers/credentials.dart';
 import '../other/styles.dart';
 import '../../models/Security.dart';
 
 class NewData extends StatefulWidget {
-  final Function _callWrite2File;
-  final data;
   final String appId;
 
-  NewData(this._callWrite2File, {this.data = '', this.appId = ''});
+  NewData({this.appId = ''});
   @override
   _NewData createState() => _NewData();
 }
@@ -127,7 +127,7 @@ class _NewData extends State<NewData> {
 
     String appId = id.isEmpty ? _addId(_appCtrl.text) : id;
 
-    widget._callWrite2File(appId, _appInfo);
+    Provider.of<Credential>(context, listen: false).addData(appId, _appInfo);
     print('-------------\n');
     print(appId);
     print(_appInfo);
@@ -143,7 +143,8 @@ class _NewData extends State<NewData> {
 
   // When the modal sheet is used for updating the data this method is called. It creates the textFields with filled content for editing purpose.
   void _forUpdateData() {
-    Map info = widget.data[widget.appId]; // contains the map of values.
+    Map info = Provider.of<Credential>(context, listen: false)
+        .data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];
 
     List<String> fillContentNames = [];

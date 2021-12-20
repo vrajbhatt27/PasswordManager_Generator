@@ -1,17 +1,12 @@
-import 'dart:io';
-import 'dart:convert';
 import 'dart:ui';
-// ignore: unused_import
-import 'dart:async';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_app/providers/credentials.dart';
 import './other/styles.dart';
 import './widgets/generatePwdCard.dart';
 import './other/customRectTween.dart';
 import './widgets/NewData.dart';
 import './widgets/ShowData.dart';
-import '../models/FileHandler.dart';
 import './other/heroDialogRoute.dart';
 import './widgets/secMsgCard.dart';
 
@@ -22,38 +17,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File _jsonFile;
-  Directory _dir;
-  bool _fexists = false;
-  String _fname = 'data.json';
-  Map<String, dynamic> _data = {};
   var height;
 
   // Instantiate the _dir and _file and reads data from jsonFile that are shown on screen.
   @override
   void initState() {
     super.initState();
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      _dir = directory;
-      _jsonFile = File(_dir.path + '/' + _fname);
-      _fexists = _jsonFile.existsSync();
-      if (_fexists) {
-        setState(() {
-          _data = jsonDecode(_jsonFile.readAsStringSync());
-          // dataLst = map2List(_data);
-        });
-      }
-    });
-  }
-
-  // calls write2File() of FileFandler and writes data into jsonFile.
-  void _callWrite2File(String key, dynamic value) {
-    FileHandler fh = FileHandler(_jsonFile);
-    fh.write2File(key, value);
-
-    this.setState(() {
-      _data = jsonDecode(_jsonFile.readAsStringSync());
-    });
+    Provider.of<Credential>(context, listen: false).fetchAndSetData();
   }
 
   // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then args data and appId are also passed with callwrite2file method.
@@ -67,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       context: ctx,
       isScrollControlled: true,
       barrierColor: Colors.black54,
-			//! ### modal bottom sheet bg color
+      //! ### modal bottom sheet bg color
       // backgroundColor: Color(0xFF1F2426),
       backgroundColor: AppColors.backgroundColor,
       shape: RoundedRectangleBorder(
@@ -78,37 +48,25 @@ class _HomePageState extends State<HomePage> {
       ),
       builder: (bCtx) {
         return BackdropFilter(
-					filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
-					child: GestureDetector(
-						onTap: () {},
-						child: update
-								? Container(
-										height: height * 0.7,
-										child: NewData(
-											_callWrite2File,
-											data: data,
-											appId: appId,
-										),
-									)
-								: Container(
-										height: height * 0.7,
-										child: NewData(_callWrite2File),
-									),
-						behavior: HitTestBehavior.opaque,
-					),
-				);
+          filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
+          child: GestureDetector(
+            onTap: () {},
+            child: update
+                ? Container(
+                    height: height * 0.7,
+                    child: NewData(
+                      appId: appId,
+                    ),
+                  )
+                : Container(
+                    height: height * 0.7,
+                    child: NewData(),
+                  ),
+            behavior: HitTestBehavior.opaque,
+          ),
+        );
       },
     );
-  }
-
-  // Deletes the given app info and calls deleteData of fileHandler. It also calls setState so that the deleted app info is removed from screen
-  void _deleteData(String appId) {
-    _data.remove(appId);
-    FileHandler fh = FileHandler(_jsonFile);
-    fh.deleteData(_data);
-    setState(() {
-      _data = jsonDecode(_jsonFile.readAsStringSync());
-    });
   }
 
   Widget showMsgWhenEmptyFile() {
@@ -141,7 +99,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool noDataInFile = _data.isEmpty;
+    bool noDataInFile = Provider.of<Credential>(context).data.isEmpty;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -150,15 +108,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             // app bar
             Container(
-              // height: height * 0.2,
-              // width: double.infinity,
-              // decoration: BoxDecoration(
-              //   color: AppColors.accentColor,
-              //   borderRadius: BorderRadius.only(
-              //     bottomLeft: Radius.circular(16),
-              //     bottomRight: Radius.circular(16),
-              //   ),
-              // ),
               margin: EdgeInsets.fromLTRB(10, 50, 0, 5),
               padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
               child: Row(
@@ -236,20 +185,8 @@ class _HomePageState extends State<HomePage> {
             Container(
               height: height * 0.7,
               color: AppColors.backgroundColor,
-              // decoration: BoxDecoration(
-              //   gradient: LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [
-              //       AppColors.backgroundColor,
-              //       AppColors.backgroundFadedColor,
-              //     ],
-              //     // stops: [0.0, 1],
-              //   ),
-              // ),
-              child: noDataInFile
-                  ? showMsgWhenEmptyFile()
-                  : ShowData(_data, _addNewData, _deleteData),
+              child:
+                  noDataInFile ? showMsgWhenEmptyFile() : ShowData(_addNewData),
             ),
           ],
         ),

@@ -1,15 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test_app/models/Security.dart';
+import 'package:test_app/providers/credentials.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
 
 class PopUpCard extends StatefulWidget {
-  final Map<String, dynamic> data;
   final String id;
 
-  PopUpCard({@required this.data, @required this.id});
+  PopUpCard({@required this.id});
 
   @override
   _PopUpCardState createState() => _PopUpCardState();
@@ -21,8 +20,14 @@ class _PopUpCardState extends State<PopUpCard> {
   var height;
   var width;
   bool isShown = false;
+  Map data = {};
 
-	// Defines how the text is shown on Card.
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // Defines how the text is shown on Card.
   Widget showText(String key, String val) {
     key = key.replaceRange(0, 1, key.split('')[0].toUpperCase());
     return Container(
@@ -54,7 +59,7 @@ class _PopUpCardState extends State<PopUpCard> {
 
   // returns list of Text that contains all the info of selected app except password.
   List<Widget> cardContent() {
-    info = widget.data[widget.id];
+    info = data[widget.id];
 
     List<Widget> lst = [];
     info.forEach((key, value) {
@@ -84,7 +89,7 @@ class _PopUpCardState extends State<PopUpCard> {
             isShown = true;
           else
             isShown = false;
-          String cipher = widget.data[widget.id]['password'];
+          String cipher = data[widget.id]['password'];
           String pwd = await decrypt(cipher);
           setState(() {
             if (isShown) {
@@ -123,7 +128,7 @@ class _PopUpCardState extends State<PopUpCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.data[widget.id]['app'],
+                data[widget.id]['app'],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.backgroundColor,
@@ -142,6 +147,7 @@ class _PopUpCardState extends State<PopUpCard> {
 
   @override
   Widget build(BuildContext context) {
+    data = Provider.of<Credential>(context, listen: false).data;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Dialog(
