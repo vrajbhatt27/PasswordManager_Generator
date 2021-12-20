@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/other/styles.dart';
-import '../models/Security.dart';
+import '../other/styles.dart';
+import '../../models/Security.dart';
 
 class NewData extends StatefulWidget {
   final Function _callWrite2File;

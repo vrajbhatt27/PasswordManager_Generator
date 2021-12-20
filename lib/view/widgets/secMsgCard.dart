@@ -3,7 +3,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
-import '../models/Security.dart';
+import '../../models/Security.dart';
 
 class SecretMsgCard extends StatefulWidget {
   @override

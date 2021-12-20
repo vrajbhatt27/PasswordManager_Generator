@@ -6,14 +6,14 @@ import 'dart:async';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import '../other/styles.dart';
-import '../widgets/generatePwdCard.dart';
-import '../other/customRectTween.dart';
-import '../widgets/NewData.dart';
-import '../widgets/ShowData.dart';
+import './other/styles.dart';
+import './widgets/generatePwdCard.dart';
+import './other/customRectTween.dart';
+import './widgets/NewData.dart';
+import './widgets/ShowData.dart';
 import '../models/FileHandler.dart';
-import '../other/heroDialogRoute.dart';
-import '../widgets/secMsgCard.dart';
+import './other/heroDialogRoute.dart';
+import './widgets/secMsgCard.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';

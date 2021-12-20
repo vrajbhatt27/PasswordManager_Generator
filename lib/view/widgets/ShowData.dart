@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
 import './popupCard.dart';
-import '../models/Security.dart';
+import '../../models/Security.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
 import '../other/heroDialogRoute.dart';

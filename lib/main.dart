@@ -9,8 +9,8 @@ import 'package:clipboard/clipboard.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
-import './other/styles.dart';
-import './screens/HomePage.dart';
+import './view/other/styles.dart';
+import './view/HomePage.dart';
 import './models/Security.dart';
 
 void main() {

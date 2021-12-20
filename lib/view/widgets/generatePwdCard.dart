@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
-import '../models/passwordGenerator.dart';
+import '../../models/passwordGenerator.dart';
 import '../other/customRectTween.dart';
 import '../other/styles.dart';
 
