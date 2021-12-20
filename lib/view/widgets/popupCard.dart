@@ -20,7 +20,7 @@ class _PopUpCardState extends State<PopUpCard> {
   var height;
   var width;
   bool isShown = false;
-  Map data = {};
+  Map<String, dynamic> data = {};
 
   @override
   void initState() {

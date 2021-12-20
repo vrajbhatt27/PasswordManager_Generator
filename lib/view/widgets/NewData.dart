@@ -25,7 +25,7 @@ class _NewData extends State<NewData> {
   FocusNode _pwdFocusNode = FocusNode();
   FocusNode _mnoFocusNode = FocusNode();
   FocusNode _otherFocusNode = FocusNode();
-  Map<String, String> _appInfo = {};
+  Map<String, dynamic> _appInfo = {};
   bool update = false;
   bool validated = true;
   List<Widget> textFields = [];
@@ -126,8 +126,7 @@ class _NewData extends State<NewData> {
     }
 
     String appId = id.isEmpty ? _addId(_appCtrl.text) : id;
-
-    Provider.of<Credential>(context, listen: false).addData(appId, _appInfo);
+    Provider.of<Credential>(context, listen: false).addData({appId: _appInfo});
     print('-------------\n');
     print(appId);
     print(_appInfo);
@@ -143,7 +142,7 @@ class _NewData extends State<NewData> {
 
   // When the modal sheet is used for updating the data this method is called. It creates the textFields with filled content for editing purpose.
   void _forUpdateData() {
-    Map info = Provider.of<Credential>(context, listen: false)
+    Map<String, dynamic> info = Provider.of<Credential>(context, listen: false)
         .data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];
 
