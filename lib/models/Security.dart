@@ -1,5 +1,5 @@
 import 'package:encrypt/encrypt.dart' as crypto;
-import 'package:test_app/models/FileHandler.dart';
+import 'package:test_app/models/hiveHandler.dart';
 
 // If not present creates new key and iv and then calls write2file of FileHandler and creates new file.
 Future<bool> createFile() async {
@@ -8,22 +8,22 @@ Future<bool> createFile() async {
 
   Map<String, dynamic> data = {'key': key.base64, 'iv': iv.base64};
 
-  FileHandler fh = FileHandler('data.json');
-  await fh.write2File(data);
+  HiveHandler h = HiveHandler('data');
+  await h.add(data);
   return true;
 }
 
 // Encrypts the given password
 Future encrypt(String pwd) async {
-  FileHandler fh = FileHandler('data.json');
+  HiveHandler h = HiveHandler('data');
 
-  Map<String, dynamic> data = await fh.readFile();
+  Map<String, dynamic> data = await h.read();
 
   if (data.isEmpty) {
     await createFile();
   }
 
-  data = await fh.readFile();
+  data = await h.read();
 
   print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   print(data);
@@ -41,9 +41,9 @@ Future encrypt(String pwd) async {
 
 // Decrypts the given password
 Future decrypt(String cipher) async {
-  FileHandler fh = FileHandler('data.json');
+  HiveHandler h = HiveHandler('data');
 
-  Map<String, dynamic> data = await fh.readFile();
+  Map<String, dynamic> data = await h.read();
 
   final key = crypto.Key.fromBase64(data['key']);
   final iv = crypto.IV.fromBase64(data['iv']);
