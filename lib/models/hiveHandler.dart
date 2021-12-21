@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'backup.dart';
 
 class HiveHandler {
   String _fname;
@@ -13,6 +14,7 @@ class HiveHandler {
     _box = await Hive.openBox(_fname);
     _box.put("this", content);
     // _box.clear();
+    Backup.backup(_fname, content);
   }
 
   Future<Map<String, dynamic>> read() async {

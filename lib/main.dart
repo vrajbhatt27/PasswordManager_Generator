@@ -11,12 +11,13 @@ import 'package:test_app/providers/credentials.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
+import './models/backup.dart';
 
-void main() async{
-	WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
-	
+
   runApp(MyApp());
 }
 
@@ -52,6 +53,7 @@ class _CalculatorState extends State<Calculator> {
   void initState() {
     super.initState();
     Provider.of<Credential>(context, listen: false).fetchAndSetData();
+    Backup.initDir();
   }
 
   // Evaluates the expression from calculator and returns the ans.
@@ -335,9 +337,10 @@ class _DrawerContentState extends State<DrawerContent> {
       child: Consumer<Credential>(
         builder: (ctx, credential, _) => ListView.builder(
           itemBuilder: (ctx, index) {
-            String appId =
-                credential.data.keys.elementAt(index); //extract the appId from data.
-            String app = credential.data[appId]['app']; //extract app name from data
+            String appId = credential.data.keys
+                .elementAt(index); //extract the appId from data.
+            String app =
+                credential.data[appId]['app']; //extract app name from data
             String subtitle;
 
             // Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
@@ -373,7 +376,8 @@ class _DrawerContentState extends State<DrawerContent> {
                     color: Colors.white60,
                     icon: Icon(Icons.copy),
                     onPressed: () async {
-                      String pwd = await decrypt(credential.data[appId]['password']);
+                      String pwd =
+                          await decrypt(credential.data[appId]['password']);
                       FlutterClipboard.copy(pwd);
                       Utils.dispToast('Password copied to clipboard');
                     },
