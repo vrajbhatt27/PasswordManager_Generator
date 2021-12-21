@@ -19,8 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var height;
 
-  // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then args data and appId are also passed with callwrite2file method.
-  void _addNewData(BuildContext ctx, {dynamic data = '', String appId = ''}) {
+  // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then appId is also passed.
+  void _addNewData(BuildContext ctx, {String appId = ''}) {
     bool update = false;
     if (appId.isNotEmpty) {
       update = true;

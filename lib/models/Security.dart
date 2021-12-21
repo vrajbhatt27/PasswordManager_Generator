@@ -1,7 +1,7 @@
 import 'package:encrypt/encrypt.dart' as crypto;
 import 'package:test_app/models/FileHandler.dart';
 
-// If not present creates new file key.pem and sets a key. If file is present then used to set new key.
+// If not present creates new key and iv and then calls write2file of FileHandler and creates new file.
 Future<bool> createFile() async {
   final key = crypto.Key.fromUtf8('#E6@O`Xp9fD4T(,!^"w:l!V81sMFca2l');
   final iv = crypto.IV.fromLength(16);
@@ -57,6 +57,7 @@ Future decrypt(String cipher) async {
   return pwd;
 }
 
+// For secret message.
 Future<String> encryptMsg(String msg) async {
   final key =
       crypto.Key.fromBase64("I0U2QE9gWHA5ZkQ0VCgsIV4idzpsIVY4MXNNRmNhMmw=");

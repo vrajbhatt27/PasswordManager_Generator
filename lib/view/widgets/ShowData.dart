@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:provider/provider.dart';
+import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
 import './popupCard.dart';
 import '../../models/Security.dart';
@@ -21,18 +22,6 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
-  // Shows the toast message.
-  void dispToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppColors.popUpCardColor,
-      textColor: AppColors.backgroundColor,
-      fontSize: 16.0,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Credential>(
@@ -79,7 +68,7 @@ class _ShowDataState extends State<ShowData> {
                             setState(() {
                               credential.deleteData(appId);
                             });
-                            dispToast("Deleted Successfully");
+                            Utils.dispToast("Deleted Successfully");
                           },
                           child: ListTile(
                             onTap: () {
@@ -126,8 +115,7 @@ class _ShowDataState extends State<ShowData> {
                                 color: Colors.white,
                               ),
                               onPressed: () {
-                                widget._updateData(context,
-                                    data: credential.data, appId: appId);
+                                widget._updateData(context, appId: appId);
                               },
                             ),
                             onLongPress: () async {
@@ -136,9 +124,9 @@ class _ShowDataState extends State<ShowData> {
                                 String pwd = await decrypt(
                                     credential.data[appId]['password']);
                                 FlutterClipboard.copy(pwd);
-                                dispToast('Password copied to clipboard');
+                                Utils.dispToast('Password copied to clipboard');
                               } else {
-                                dispToast('Password Not available');
+                                Utils.dispToast('Password Not available');
                               }
                             },
                           ),

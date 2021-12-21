@@ -28,6 +28,7 @@ class FileHandler {
       {bool override = false}) async {
     File file = await getDir();
 
+		// This is user for delete data.
     if (override) {
       file.writeAsStringSync(jsonEncode(content));
       return;
@@ -52,6 +53,8 @@ class FileHandler {
   Future<Map<String, dynamic>> readFile() async {
     Map<String, dynamic> content = {};
     File file = await getDir();
+
+		// If file doesn't exist, then it returns empty map.
     if (!file.existsSync()) {
       return content;
     }

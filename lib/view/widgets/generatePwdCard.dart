@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
 import '../../models/passwordGenerator.dart';
 import '../other/customRectTween.dart';
@@ -16,19 +15,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
   @override
   initState() {
     super.initState();
-    pwd = GeneratePassword().generatePassword();
-  }
-
-  // Shows the toast message.
-  void dispToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppColors.popUpCardColor,
-      textColor: AppColors.backgroundColor,
-      fontSize: 16.0,
-    );
+    pwd = Utils().generatePassword();
   }
 
   Widget popUpContent() {
@@ -74,7 +61,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
                     icon: Icon(Icons.copy),
                     onPressed: () {
                       FlutterClipboard.copy(pwd);
-                      dispToast('Copied To Clipboard');
+                      Utils.dispToast('Copied To Clipboard');
                     },
                   ),
                 ),
@@ -86,7 +73,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  pwd = GeneratePassword().generatePassword();
+                  pwd = Utils().generatePassword();
                 });
               },
               child: Text(

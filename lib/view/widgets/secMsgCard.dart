@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:test_app/models/passwordGenerator.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
 import '../../models/Security.dart';
@@ -14,18 +14,6 @@ class SecretMsgCardState extends State<SecretMsgCard> {
   var width, height, pwd;
   final msgCtrl = TextEditingController();
   var encMsg, decMsg;
-
-  // Shows the toast message.
-  void dispToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppColors.popUpCardColor,
-      textColor: AppColors.backgroundColor,
-      fontSize: 16.0,
-    );
-  }
 
   Widget popUpContent() {
     return Container(
@@ -72,7 +60,7 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                       color: AppColors.backgroundColor,
                       onPressed: () {
                         FlutterClipboard.copy(msgCtrl.text);
-                        dispToast('Copied To Clipboard');
+                        Utils.dispToast('Copied To Clipboard');
                       },
                     ),
                     flex: 1,

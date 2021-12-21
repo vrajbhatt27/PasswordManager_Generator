@@ -1,9 +1,9 @@
 import 'dart:ui';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
+import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
@@ -318,18 +318,6 @@ class DrawerContent extends StatefulWidget {
 }
 
 class _DrawerContentState extends State<DrawerContent> {
-  // Display the toast message when password copied.
-  void dispToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppColors.popUpCardColor,
-      textColor: AppColors.backgroundColor,
-      fontSize: 16.0,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -380,7 +368,7 @@ class _DrawerContentState extends State<DrawerContent> {
                     onPressed: () async {
                       String pwd = await decrypt(credential.data[appId]['password']);
                       FlutterClipboard.copy(pwd);
-                      dispToast('Password copied to clipboard');
+                      Utils.dispToast('Password copied to clipboard');
                     },
                   ),
                 ),
