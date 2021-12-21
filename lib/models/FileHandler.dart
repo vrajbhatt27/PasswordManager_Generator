@@ -24,7 +24,8 @@ class FileHandler {
   }
 
   // Writes data to jsonFile
-  Future<void> write2File(Map<String, dynamic> content, {bool override = false}) async {
+  Future<void> write2File(Map<String, dynamic> content,
+      {bool override = false}) async {
     File file = await getDir();
 
     if (override) {
@@ -49,13 +50,12 @@ class FileHandler {
   }
 
   Future<Map<String, dynamic>> readFile() async {
+    Map<String, dynamic> content = {};
     File file = await getDir();
-    Map<String, dynamic> content = jsonDecode(file.readAsStringSync());
+    if (!file.existsSync()) {
+      return content;
+    }
+    content = jsonDecode(file.readAsStringSync());
     return content;
   }
-
-  // // DeleteData from jsonFile.
-  // void deleteData(Map<String, dynamic> content) {
-  //   getDir().then((file) => );
-  // }
 }

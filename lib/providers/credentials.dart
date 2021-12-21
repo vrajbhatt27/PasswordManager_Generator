@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:test_app/models/FileHandler.dart';
 
 class Credential extends ChangeNotifier {
-  FileHandler _fh = FileHandler('data.json');
+  FileHandler _fh = FileHandler('credentials.json');
 
   Map<String, dynamic> _data = {};
 
