@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/models/passwordGenerator.dart';

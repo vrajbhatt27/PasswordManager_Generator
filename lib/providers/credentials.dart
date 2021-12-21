@@ -32,4 +32,12 @@ class Credential extends ChangeNotifier {
     print(_data);
     notifyListeners();
   }
+
+  findById(appId) {
+    if (_data.containsKey(appId)) {
+      return _data[appId];
+    }
+
+    return null;
+  }
 }

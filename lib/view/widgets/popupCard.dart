@@ -16,15 +16,15 @@ class PopUpCard extends StatefulWidget {
 
 class _PopUpCardState extends State<PopUpCard> {
   String pwdTitle = '....'; //It shows this text when the card pops up.
-  Map info;
+  var info = {};
   var height;
   var width;
   bool isShown = false;
-  Map<String, dynamic> data = {};
 
   @override
   void initState() {
     super.initState();
+    info = Provider.of<Credential>(context, listen: false).findById(widget.id);
   }
 
   // Defines how the text is shown on Card.
@@ -59,8 +59,6 @@ class _PopUpCardState extends State<PopUpCard> {
 
   // returns list of Text that contains all the info of selected app except password.
   List<Widget> cardContent() {
-    info = data[widget.id];
-
     List<Widget> lst = [];
     info.forEach((key, value) {
       if (key != 'password' && key != 'app') {
@@ -89,7 +87,7 @@ class _PopUpCardState extends State<PopUpCard> {
             isShown = true;
           else
             isShown = false;
-          String cipher = data[widget.id]['password'];
+          String cipher = info['password'];
           String pwd = await decrypt(cipher);
           setState(() {
             if (isShown) {
@@ -105,7 +103,7 @@ class _PopUpCardState extends State<PopUpCard> {
       leading: Text('Password: '),
       title: Text(pwdTitle),
       onTap: () async {
-        String cipher = widget.data[widget.id]['password'];
+        String cipher = widget.info['password'];
         String pwd = await decrypt(cipher);
         setState(() {
           pwdTitle = pwd;
@@ -128,7 +126,7 @@ class _PopUpCardState extends State<PopUpCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                data[widget.id]['app'],
+                info['app'],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.backgroundColor,
@@ -147,7 +145,6 @@ class _PopUpCardState extends State<PopUpCard> {
 
   @override
   Widget build(BuildContext context) {
-    data = Provider.of<Credential>(context, listen: false).data;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Dialog(
