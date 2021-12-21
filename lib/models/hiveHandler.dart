@@ -3,7 +3,6 @@ import 'backup.dart';
 
 class HiveHandler {
   String _fname;
-  Box _box;
 
   HiveHandler(fname) {
     this._fname = fname;
@@ -11,18 +10,38 @@ class HiveHandler {
 
   // Writes data to Hive
   Future<void> add(Map<String, dynamic> content) async {
-    _box = await Hive.openBox(_fname);
-    _box.put("this", content);
+    Box box = await Hive.openBox(_fname);
+    box.put("this", content);
     // _box.clear();
     Backup.backup(_fname, content);
   }
 
   Future<Map<String, dynamic>> read() async {
     Map<String, dynamic> content = {};
-    _box = await Hive.openBox(_fname);
-    if (_box.isNotEmpty) {
-      content = Map<String, dynamic>.from(_box.values.toList()[0]);
+    Box box = await Hive.openBox(_fname);
+    if (box.isNotEmpty) {
+      content = Map<String, dynamic>.from(box.values.toList()[0]);
     }
     return content;
+  }
+
+  static Future<void> restoreData() async {
+    List<String> fnames = ['credentials', 'data'];
+    Box box;
+    Map<String, dynamic> data = {};
+    var res;
+    for (var fname in fnames) {
+      res = await Backup.restore(fname);
+      if (res == null) {
+        print("File Not Found");
+        continue;
+      }
+
+      data = Map<String, dynamic>.from(res);
+      box = await Hive.openBox(fname);
+      box.put("this", data);
+    }
+
+    print("All Data Restored");
   }
 }

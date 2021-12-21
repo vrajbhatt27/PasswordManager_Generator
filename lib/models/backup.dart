@@ -73,4 +73,12 @@ class Backup {
       }
     }
   }
+
+  static Future restore(String fname) async {
+    File file = File(directory.path + '/' + fname + '.json');
+    if (await file.exists()) {
+      return jsonDecode(await file.readAsString());
+    }
+    return null;
+  }
 }
