@@ -19,13 +19,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var height;
 
-  // Instantiate the _dir and _file and reads data from jsonFile that are shown on screen.
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<Credential>(context, listen: false).fetchAndSetData();
-  }
-
   // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then args data and appId are also passed with callwrite2file method.
   void _addNewData(BuildContext ctx, {dynamic data = '', String appId = ''}) {
     bool update = false;

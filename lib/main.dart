@@ -1,12 +1,6 @@
-import 'dart:io';
-import 'dart:convert';
 import 'dart:ui';
-// ignore: unused_import
-import 'dart:async';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
@@ -23,16 +17,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<Credential>(
-			create: (ctx) => Credential(),
-			child: MaterialApp(
-				debugShowCheckedModeBanner: false,
-					theme: ThemeData.dark(),
-				home: Calculator(),
-				routes: {
-					HomePage.routeName: (ctx) => HomePage(),
-				},
-			),
-		);
+      create: (ctx) => Credential(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: Calculator(),
+        routes: {
+          HomePage.routeName: (ctx) => HomePage(),
+        },
+      ),
+    );
   }
 }
 
@@ -47,7 +41,13 @@ class _CalculatorState extends State<Calculator> {
   String ans = '';
   bool isEvaluated = false;
 
-	// Evaluates the expression from calculator and returns the ans.
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<Credential>(context, listen: false).fetchAndSetData();
+  }
+
+  // Evaluates the expression from calculator and returns the ans.
   String evaluate() {
     String inp = exp.replaceAll(RegExp(r'x'), '*');
     String val;
@@ -68,7 +68,7 @@ class _CalculatorState extends State<Calculator> {
     return val;
   }
 
-	// Specifies action for each button on calculator.
+  // Specifies action for each button on calculator.
   void actionOnButtonPressed(String text) {
     if (isEvaluated) {
       isEvaluated = false;
@@ -105,8 +105,8 @@ class _CalculatorState extends State<Calculator> {
       }
     } else if (text == "=") {
       isEvaluated = true;
-      if (exp == "55") { 
-				// Opens the HomePage.
+      if (exp == "55") {
+        // Opens the HomePage.
         // Navigator.of(context).pushNamed(HomePage.routeName);
         Navigator.of(context).popAndPushNamed(HomePage.routeName);
       } else if (exp == '00') {
@@ -114,7 +114,7 @@ class _CalculatorState extends State<Calculator> {
           ans = '';
           exp = '';
         });
-				// Opens the drawer for direct password access.
+        // Opens the drawer for direct password access.
         globalKey.currentState.openEndDrawer();
       } else if (exp.contains("mod")) {
         var lst = exp.split(' ');
@@ -138,7 +138,7 @@ class _CalculatorState extends State<Calculator> {
     }
   }
 
-	// Builds buttons for calculator.
+  // Builds buttons for calculator.
   Widget customButton(String text) {
     return InkWell(
       onTap: () => actionOnButtonPressed(text),
@@ -162,7 +162,8 @@ class _CalculatorState extends State<Calculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
-      endDrawer: Drawer( //Opens the drawer for direct password access.
+      endDrawer: Drawer(
+        //Opens the drawer for direct password access.
         child: BackdropFilter(
           child: DrawerContent(),
           filter: ImageFilter.blur(
@@ -310,36 +311,14 @@ class _CalculatorState extends State<Calculator> {
   }
 }
 
-// Class that shows the drawer content. 
+// Class that shows the drawer content.
 class DrawerContent extends StatefulWidget {
   @override
   _DrawerContentState createState() => _DrawerContentState();
 }
 
 class _DrawerContentState extends State<DrawerContent> {
-  File _jsonFile;
-  Directory _dir;
-  bool _fexists = false;
-  String _fname = 'data.json';
-  Map<String, dynamic> _data = {};
-
-  // Instantiate the _dir and _file and reads data from jsonFile that are shown on screen.
-  @override
-  void initState() {
-    super.initState();
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      _dir = directory;
-      _jsonFile = File(_dir.path + '/' + _fname);
-      _fexists = _jsonFile.existsSync();
-      if (_fexists) {
-        setState(() {
-          _data = jsonDecode(_jsonFile.readAsStringSync());
-        });
-      }
-    });
-  }
-
-	// Display the toast message when password copied.
+  // Display the toast message when password copied.
   void dispToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
@@ -358,58 +337,60 @@ class _DrawerContentState extends State<DrawerContent> {
         image: DecorationImage(
             image: AssetImage("assets/Images/drawerbg.png"), fit: BoxFit.cover),
       ),
-      child: ListView.builder(
-        itemBuilder: (ctx, index) {
-          String appId =
-              _data.keys.elementAt(index); //extract the appId from data.
-          String app = _data[appId]['app']; //extract app name from data
-          String subtitle;
+      child: Consumer<Credential>(
+        builder: (ctx, credential, _) => ListView.builder(
+          itemBuilder: (ctx, index) {
+            String appId =
+                credential.data.keys.elementAt(index); //extract the appId from data.
+            String app = credential.data[appId]['app']; //extract app name from data
+            String subtitle;
 
-          // Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
-          if (_data[appId].containsKey('email')) {
-            subtitle = _data[appId]['email'];
-          } else if (_data[appId].containsKey('mobile no')) {
-            subtitle = _data[appId]['mobile no'];
-          } else {
-            subtitle = '';
-          }
+            // Here for subtitle in listtile, email is shown if it is present else mobile no is shown if it is present else nothing is shown.
+            if (credential.data[appId].containsKey('email')) {
+              subtitle = credential.data[appId]['email'];
+            } else if (credential.data[appId].containsKey('mobile no')) {
+              subtitle = credential.data[appId]['mobile no'];
+            } else {
+              subtitle = '';
+            }
 
-          if (_data[appId].containsKey('password')) {
-            return Card(
-              color: Colors.transparent,
-              elevation: 5,
-              margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
-              child: ListTile(
-                title: Text(
-                  app,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  subtitle,
-                  style: TextStyle(
+            if (credential.data[appId].containsKey('password')) {
+              return Card(
+                color: Colors.transparent,
+                elevation: 5,
+                margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+                child: ListTile(
+                  title: Text(
+                    app,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white60,
+                      fontSize: 15,
+                    ),
+                  ),
+                  trailing: IconButton(
                     color: Colors.white60,
-                    fontSize: 15,
+                    icon: Icon(Icons.copy),
+                    onPressed: () async {
+                      String pwd = await decrypt(credential.data[appId]['password']);
+                      FlutterClipboard.copy(pwd);
+                      dispToast('Password copied to clipboard');
+                    },
                   ),
                 ),
-                trailing: IconButton(
-                  color: Colors.white60,
-                  icon: Icon(Icons.copy),
-                  onPressed: () async {
-                    String pwd = await decrypt(_data[appId]['password']);
-                    FlutterClipboard.copy(pwd);
-                    dispToast('Password copied to clipboard');
-                  },
-                ),
-              ),
-            );
-          }
+              );
+            }
 
-          return Container();
-        },
-        itemCount: _data.length,
+            return Container();
+          },
+          itemCount: credential.data.length,
+        ),
       ),
     );
   }
