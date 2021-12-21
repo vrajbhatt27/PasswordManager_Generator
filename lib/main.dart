@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
@@ -9,7 +12,11 @@ import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
 
-void main() {
+void main() async{
+	WidgetsFlutterBinding.ensureInitialized();
+  Directory dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
+	
   runApp(MyApp());
 }
 

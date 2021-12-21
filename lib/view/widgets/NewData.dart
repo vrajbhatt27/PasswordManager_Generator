@@ -142,7 +142,7 @@ class _NewData extends State<NewData> {
 
   // When the modal sheet is used for updating the data this method is called. It creates the textFields with filled content for editing purpose.
   void _forUpdateData() {
-    Map<String, dynamic> info = Provider.of<Credential>(context, listen: false)
+    Map info = Provider.of<Credential>(context, listen: false)
         .data[widget.appId]; // contains the map of values.
     _appCtrl.text = info['app'];
 

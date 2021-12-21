@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:test_app/models/FileHandler.dart';
 
 class Credential extends ChangeNotifier {
   FileHandler _fh = FileHandler('credentials.json');
-
+  Box _box;
   Map<String, dynamic> _data = {};
 
   Map<String, dynamic> get data {
@@ -11,7 +12,10 @@ class Credential extends ChangeNotifier {
   }
 
   Future<void> fetchAndSetData() async {
-    _data = await _fh.readFile();
+    _box = await Hive.openBox('credentials');
+    if (_box.isNotEmpty) {
+      _data = Map<String, dynamic>.from(_box.values.toList()[0]);
+    }
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     print(_data);
     notifyListeners();
@@ -19,7 +23,9 @@ class Credential extends ChangeNotifier {
 
   Future<void> addData(Map<String, dynamic> content) async {
     _data.addAll(content);
-    _fh.write2File(content);
+    _box = await Hive.openBox('credentials');
+    _box.put("this", _data);
+    // _box.clear();
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     print(_data);
     notifyListeners();
@@ -27,7 +33,8 @@ class Credential extends ChangeNotifier {
 
   Future<void> deleteData(appId) async {
     _data.remove(appId);
-    _fh.write2File(_data, override: true);
+    _box = await Hive.openBox('credentials');
+    _box.put("this", _data);
     print("############################################");
     print(_data);
     notifyListeners();
