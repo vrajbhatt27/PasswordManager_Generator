@@ -11,8 +11,9 @@ class SecretMsgCard extends StatefulWidget {
 }
 
 class SecretMsgCardState extends State<SecretMsgCard> {
+  FocusNode _fn = FocusNode();
   var width, height, pwd;
-  final msgCtrl = TextEditingController();
+  final _msgCtrl = TextEditingController();
   var encMsg, decMsg;
 
   Widget popUpContent() {
@@ -33,10 +34,11 @@ class SecretMsgCardState extends State<SecretMsgCard> {
               children: [
                 Flexible(
                   child: TextField(
+                    focusNode: _fn,
                     style: TextStyle(
                         color: AppColors.backgroundColor,
                         fontWeight: FontWeight.w600),
-                    controller: msgCtrl,
+                    controller: _msgCtrl,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -49,17 +51,23 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                             width: 2,
                           )),
                       hintText: 'Enter',
+                      hintStyle: TextStyle(
+                        color: AppColors.backgroundColor,
+                      ),
                     ),
                   ),
-                  flex: 12,
+                  flex: 9,
                   fit: FlexFit.loose,
                 ),
                 Flexible(
                     child: IconButton(
-                      icon: Icon(Icons.copy),
+                      icon: Icon(
+                        Icons.copy,
+                        size: 30,
+                      ),
                       color: AppColors.backgroundColor,
                       onPressed: () {
-                        FlutterClipboard.copy(msgCtrl.text);
+                        FlutterClipboard.copy(_msgCtrl.text);
                         Utils.dispToast('Copied To Clipboard');
                       },
                     ),
@@ -78,8 +86,11 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                     color: AppColors.backgroundColor,
                     icon: Icon(Icons.lock_outline),
                     onPressed: () async {
-                      encMsg = await encryptMsg(msgCtrl.text);
-                      msgCtrl.text = encMsg;
+                      if (_msgCtrl.text.isNotEmpty) {
+                        _fn.unfocus();
+                        encMsg = await encryptMsg(_msgCtrl.text);
+                        _msgCtrl.text = encMsg;
+                      }
                     },
                   ),
                 ),
@@ -89,8 +100,11 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                     color: AppColors.backgroundColor,
                     icon: Icon(Icons.lock_open),
                     onPressed: () async {
-                      decMsg = await decryptMsg(msgCtrl.text);
-                      msgCtrl.text = decMsg;
+                      if (_msgCtrl.text.isNotEmpty) {
+                        _fn.unfocus();
+                        decMsg = await decryptMsg(_msgCtrl.text);
+                        _msgCtrl.text = decMsg;
+                      }
                     },
                   ),
                 ),

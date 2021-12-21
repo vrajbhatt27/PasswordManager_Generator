@@ -2,13 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/providers/credentials.dart';
+import './widgets/drawer.dart';
 import './other/styles.dart';
-import './widgets/generatePwdCard.dart';
-import './other/customRectTween.dart';
 import './widgets/NewData.dart';
 import './widgets/ShowData.dart';
-import './other/heroDialogRoute.dart';
-import './widgets/secMsgCard.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -17,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final globalKey = GlobalKey<ScaffoldState>();
   var height;
 
   // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then appId is also passed.
@@ -95,6 +93,18 @@ class _HomePageState extends State<HomePage> {
     bool noDataInFile = Provider.of<Credential>(context).data.isEmpty;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
+			 key: globalKey,
+      endDrawer: Drawer(
+        //Opens the drawer for direct password access.
+        child: BackdropFilter(
+          child: MyDrawer(),
+          filter: ImageFilter.blur(
+            sigmaX: 10,
+            sigmaY: 10,
+          ),
+        ),
+        elevation: 30,
+      ),
       backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Column(
@@ -111,62 +121,21 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       'Credentials',
                       style: TextStyle(
-                          fontSize: 55,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 55,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: Hero(
-                      createRectTween: (begin, end) {
-                        return CustomRectTween(begin: begin, end: end);
-                      },
-                      tag: 'menu',
-                      child: Material(
-                        color: AppColors.backgroundColor,
-                        child: PopupMenuButton(
-                          //Three dots menu
-                          onSelected: (choice) {
-                            if (choice == 'Generate Passwords') {
-                              print('Password Generate ');
-                              Navigator.of(context).push(
-                                // It opens the popUpcard with animation.
-                                HeroDialogRoute(
-                                  builder: (context) => Center(
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 10, sigmaY: 10),
-                                      child: GeneratePwdCard(),
-                                    ), //AppPopupCard(appId)
-                                  ),
-                                ),
-                              );
-                            } else if (choice == 'Encrypted Messages') {
-                              print('Encrypt Password');
-                              Navigator.of(context).push(
-                                // It opens the popUpcard with animation.
-                                HeroDialogRoute(
-                                  builder: (context) => Center(
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 10, sigmaY: 10),
-                                      child: SecretMsgCard(),
-                                    ), //AppPopupCard(appId)
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          itemBuilder: (BuildContext ctx) {
-                            return ['Generate Passwords', 'Encrypted Messages']
-                                .map((choice) {
-                              return PopupMenuItem(
-                                  child: Text(choice), value: choice);
-                            }).toList();
-                          },
-                        ),
-                        // ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        size: 35,
                       ),
+                      onPressed: () {
+                        globalKey.currentState.openEndDrawer();
+                      },
                     ),
                   ),
                 ],
