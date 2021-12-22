@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final globalKey = GlobalKey<ScaffoldState>();
-  var height;
+  var _height;
+  bool _notesSelected = false;
 
   // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then appId is also passed.
   void _addNewData(BuildContext ctx, {String appId = ''}) {
@@ -44,13 +45,13 @@ class _HomePageState extends State<HomePage> {
             onTap: () {},
             child: update
                 ? Container(
-                    height: height * 0.7,
+                    height: _height * 0.7,
                     child: NewData(
                       appId: appId,
                     ),
                   )
                 : Container(
-                    height: height * 0.7,
+                    height: _height * 0.7,
                     child: NewData(),
                   ),
             behavior: HitTestBehavior.opaque,
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showMsgWhenEmptyFile() {
+    String dataName = _notesSelected ? 'notes' : 'credentials';
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-              'No data present. Start adding your credentials...',
+              'No data present. Start adding your $dataName...',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 28,
@@ -91,9 +93,61 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     bool noDataInFile = Provider.of<Credential>(context).data.isEmpty;
-    height = MediaQuery.of(context).size.height;
+    _height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: globalKey,
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _notesSelected = false;
+                  });
+                },
+                icon: Icon(
+                  Icons.privacy_tip_outlined,
+                  size: 30,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: IconButton(
+                onPressed: () {
+									setState(() {
+                    _notesSelected = true;
+                  });
+								},
+                icon: Icon(
+                  Icons.notes,
+                  size: 30,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: IconButton(
+                onPressed: () {
+                  globalKey.currentState.openEndDrawer();
+                },
+                icon: Icon(
+                  Icons.settings,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
+        ),
+        shape: CircularNotchedRectangle(),
+        color: AppColors.bgtColor,
+        notchMargin: 5,
+        elevation: 5,
+      ),
       endDrawer: Drawer(
         //Opens the drawer for direct password access.
         child: BackdropFilter(
@@ -123,23 +177,12 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        'Credentials',
+                        _notesSelected ? 'Notes' : 'Credentials',
                         style: TextStyle(
                           fontSize: 55,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.menu,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          globalKey.currentState.openEndDrawer();
-                        },
                       ),
                     ),
                   ],
@@ -149,17 +192,19 @@ class _HomePageState extends State<HomePage> {
 
               // main body
               Container(
-                height: height * 0.7,
+                height: _height * 0.7,
                 color: AppColors.backgroundColor,
                 child: noDataInFile
                     ? showMsgWhenEmptyFile()
-                    : ShowData(_addNewData),
+                    : _notesSelected
+                        ? Text("Show Notes")
+                        : ShowData(_addNewData),
               ),
             ],
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.bgtColor,
         child: Icon(
