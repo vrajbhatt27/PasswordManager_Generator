@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
+import 'package:test_app/view/settingsPage.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         home: Calculator(),
         routes: {
           HomePage.routeName: (ctx) => HomePage(),
+					SettingsPage.routeName: (ctx) => SettingsPage(),
         },
       ),
     );

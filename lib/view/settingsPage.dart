@@ -11,8 +11,10 @@ import 'package:test_app/view/other/styles.dart';
 import 'package:test_app/view/widgets/generatePwdCard.dart';
 import 'package:test_app/view/widgets/secMsgCard.dart';
 
-class MyDrawer extends StatelessWidget {
-  void _openGeneratePwd({context}) {
+class SettingsPage extends StatelessWidget {
+  static const routeName = '/settings';
+
+  void _openGeneratePwd({BuildContext context}) {
     Navigator.of(context).push(
       // It opens the popUpcard with animation.
       HeroDialogRoute(
@@ -26,7 +28,7 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  void _openSecretMsg({context}) {
+  void _openSecretMsg({BuildContext context}) {
     Navigator.of(context).push(
       // It opens the popUpcard with animation.
       HeroDialogRoute(
@@ -44,7 +46,7 @@ class MyDrawer extends StatelessWidget {
     await HiveHandler.restoreData();
     await Provider.of<Credential>(context, listen: false).fetchAndSetData();
     Utils.dispToast("Data Imported Successfully");
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   void _exportData({BuildContext context}) async {
@@ -60,47 +62,50 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.backgroundColor,
-      child: ListView(
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.bgtColor,
+        title: Text('Settings'),
+      ),
+      body: GridView.count(
+        crossAxisCount: 2,
         children: [
-          SizedBox(
-            height: 150,
-          ),
-          Divider(
-            color: Colors.white,
-          ),
-          DrawerCard('Generate Password', _openGeneratePwd),
-          DrawerCard('Secret Message', _openSecretMsg),
-          DrawerCard('Import Data', _importData),
-          DrawerCard('Export Data', _exportData),
+          GridCard('Generate\nPassword', _openGeneratePwd),
+          GridCard('Secret\nMessage', _openSecretMsg),
+          GridCard('Import\nData', _importData),
+          GridCard('Export\nData', _exportData),
         ],
       ),
     );
   }
 }
 
-class DrawerCard extends StatelessWidget {
-  final String _title;
+class GridCard extends StatelessWidget {
+  final _title;
   final Function _action;
-  final bool noContext;
-  DrawerCard(this._title, this._action, {this.noContext = false});
+  GridCard(this._title, this._action);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-			color: AppColors.bgtColor,
-      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
-      child: ListTile(
-        title: Text(
-          _title,
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
-        onTap: noContext ? _action : () => _action(context: context),
-      ),
+      color: AppColors.bgtColor,
+      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      child: InkWell(
+				child: Center(
+					child: Text(
+						_title,
+						style: TextStyle(
+							fontSize: 24,
+							fontWeight: FontWeight.bold,
+						),
+						textAlign: TextAlign.center,
+					),
+				),
+
+				onTap: () => _action(context: context),
+			),
     );
   }
 }

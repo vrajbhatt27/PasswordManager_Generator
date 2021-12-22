@@ -1,8 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/providers/credentials.dart';
-import './widgets/drawer.dart';
+import 'package:test_app/view/settingsPage.dart';
 import './other/styles.dart';
 import './widgets/NewData.dart';
 import './widgets/ShowData.dart';
@@ -92,7 +93,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool noDataInFile = Provider.of<Credential>(context).data.isEmpty;
+    bool noDataInFile =
+        _notesSelected ? true : Provider.of<Credential>(context).data.isEmpty;
     _height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: globalKey,
@@ -119,10 +121,10 @@ class _HomePageState extends State<HomePage> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: IconButton(
                 onPressed: () {
-									setState(() {
+                  setState(() {
                     _notesSelected = true;
                   });
-								},
+                },
                 icon: Icon(
                   Icons.notes,
                   size: 30,
@@ -133,7 +135,8 @@ class _HomePageState extends State<HomePage> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: IconButton(
                 onPressed: () {
-                  globalKey.currentState.openEndDrawer();
+                  // globalKey.currentState.openEndDrawer();
+                  Navigator.of(context).pushNamed(SettingsPage.routeName);
                 },
                 icon: Icon(
                   Icons.settings,
@@ -145,19 +148,8 @@ class _HomePageState extends State<HomePage> {
         ),
         shape: CircularNotchedRectangle(),
         color: AppColors.bgtColor,
-        notchMargin: 5,
+        notchMargin: 8,
         elevation: 5,
-      ),
-      endDrawer: Drawer(
-        //Opens the drawer for direct password access.
-        child: BackdropFilter(
-          child: MyDrawer(),
-          filter: ImageFilter.blur(
-            sigmaX: 10,
-            sigmaY: 10,
-          ),
-        ),
-        elevation: 30,
       ),
       backgroundColor: AppColors.backgroundColor,
       body: RefreshIndicator(
@@ -205,14 +197,37 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        iconTheme: IconThemeData(color: Colors.white, size: 40),
         backgroundColor: AppColors.bgtColor,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 40,
-        ),
-        onPressed: () => _addNewData(context),
+        spaceBetweenChildren: 10,
+        children: [
+          SpeedDialChild(
+            child: Icon(
+              Icons.privacy_tip_outlined,
+              color: Colors.black,
+            ),
+            backgroundColor: Colors.white,
+            label: 'Credential',
+            labelStyle:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            labelBackgroundColor: Colors.white,
+            onTap: () => _addNewData(context),
+          ),
+          SpeedDialChild(
+            child: Icon(
+              Icons.notes,
+              color: Colors.black,
+            ),
+            backgroundColor: Colors.white,
+            label: 'Notes',
+            labelStyle:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            labelBackgroundColor: Colors.white,
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
