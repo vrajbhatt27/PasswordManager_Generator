@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     bool noDataInFile = Provider.of<Credential>(context).data.isEmpty;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
-			 key: globalKey,
+      key: globalKey,
       endDrawer: Drawer(
         //Opens the drawer for direct password access.
         child: BackdropFilter(
@@ -106,51 +106,57 @@ class _HomePageState extends State<HomePage> {
         elevation: 30,
       ),
       backgroundColor: AppColors.backgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // app bar
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 50, 0, 5),
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: Text(
-                      'Credentials',
-                      style: TextStyle(
-                        fontSize: 55,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // app bar
+              Container(
+                margin: EdgeInsets.fromLTRB(10, 50, 0, 5),
+                padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        'Credentials',
+                        style: TextStyle(
+                          fontSize: 55,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        size: 35,
+                    Expanded(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.menu,
+                          size: 35,
+                        ),
+                        onPressed: () {
+                          globalKey.currentState.openEndDrawer();
+                        },
                       ),
-                      onPressed: () {
-                        globalKey.currentState.openEndDrawer();
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                alignment: Alignment.bottomLeft,
               ),
-              alignment: Alignment.bottomLeft,
-            ),
 
-            // main body
-            Container(
-              height: height * 0.7,
-              color: AppColors.backgroundColor,
-              child:
-                  noDataInFile ? showMsgWhenEmptyFile() : ShowData(_addNewData),
-            ),
-          ],
+              // main body
+              Container(
+                height: height * 0.7,
+                color: AppColors.backgroundColor,
+                child: noDataInFile
+                    ? showMsgWhenEmptyFile()
+                    : ShowData(_addNewData),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

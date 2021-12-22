@@ -6,7 +6,6 @@ import 'package:test_app/models/backup.dart';
 import 'package:test_app/models/hiveHandler.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
-import 'package:test_app/view/HomePage.dart';
 import 'package:test_app/view/other/heroDialogRoute.dart';
 import 'package:test_app/view/other/styles.dart';
 import 'package:test_app/view/widgets/generatePwdCard.dart';
@@ -42,10 +41,10 @@ class MyDrawer extends StatelessWidget {
   }
 
   void _importData({BuildContext context}) async {
-    HiveHandler.restoreData();
+    await HiveHandler.restoreData();
     await Provider.of<Credential>(context, listen: false).fetchAndSetData();
     Utils.dispToast("Data Imported Successfully");
-    Navigator.of(context).popAndPushNamed(HomePage.routeName);
+    Navigator.of(context).pop();
   }
 
   void _exportData({BuildContext context}) async {

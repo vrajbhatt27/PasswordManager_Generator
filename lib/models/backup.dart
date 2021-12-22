@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -41,10 +42,15 @@ class Backup {
   }
 
   static Future<bool> _requestPermission(Permission permission) async {
+    print("Here 1");
     if (await permission.isGranted) {
       return true;
     } else {
       var result = await permission.request();
+      if (result == PermissionStatus.restricted) {
+        Permission pm2 = Permission.storage;
+        result = await pm2.request();
+      }
       if (result == PermissionStatus.granted) {
         return true;
       } else {
