@@ -60,23 +60,21 @@ class Backup {
   }
 
   static Future<void> backup(String fname, Map<String, dynamic> content) async {
-    if (content.isNotEmpty) {
-      try {
-        File file = File(directory.path + '/' + fname + '.json');
-        if (await file.exists()) {
-          await file.writeAsString(jsonEncode(content));
-          print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-          print("Backup Done");
-        } else {
-          await file.create();
-          print("-----------------Backup File created.....");
-          await file.writeAsString(jsonEncode(content));
-          print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-          print("Backup Done");
-        }
-      } catch (e) {
-        print(e);
+    try {
+      File file = File(directory.path + '/' + fname + '.json');
+      if (await file.exists()) {
+        await file.writeAsString(jsonEncode(content));
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        print("Backup Done");
+      } else {
+        await file.create();
+        print("-----------------Backup File created.....");
+        await file.writeAsString(jsonEncode(content));
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        print("Backup Done");
       }
+    } catch (e) {
+      print(e);
     }
   }
 
