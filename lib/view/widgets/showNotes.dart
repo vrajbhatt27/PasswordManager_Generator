@@ -49,8 +49,20 @@ class ShowNotes extends StatelessWidget {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: AppColors.backgroundColor,
-                    title: Text("Delete"),
-                    content: Text("Are you sure you want to delete $noteTitle"),
+                    title: Text(
+                      "Delete",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    content: Text(
+                      "Are you sure you want to delete $noteTitle",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -62,7 +74,7 @@ class ShowNotes extends StatelessWidget {
                         onPressed: () {
                           notes.deleteNote(noteId);
                           Utils.dispToast('Note Deleted Successfully');
-													Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         },
                         icon: Icon(Icons.check),
                       ),

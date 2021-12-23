@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_app/models/Security.dart';
 import 'package:test_app/models/passwordGenerator.dart';
-// import 'package:test_app/models/Security.dart';
 import 'package:test_app/view/other/styles.dart';
 import '../../providers/notes.dart';
 
@@ -41,12 +41,12 @@ class _NewNoteState extends State<NewNote> {
     _contentFn.dispose();
   }
 
-  void _forRead() {
+  Future<void> _forRead() async{
     Map info =
         Provider.of<Notes>(context, listen: false).findById(widget.noteId);
 
     _titleCtrl.text = info.keys.toList()[0];
-    _contentCtrl.text = info.values.toList()[0];
+    _contentCtrl.text = await decrypt(info.values.toList()[0]);
   }
 
   bool validate(String str) {
@@ -79,7 +79,9 @@ class _NewNoteState extends State<NewNote> {
     String noteTitle = _titleCtrl.text;
     String noteContent = _contentCtrl.text;
 
-		noteTitle = noteTitle.replaceRange(0, 1, noteTitle.split('')[0].toUpperCase());
+    noteTitle =
+        noteTitle.replaceRange(0, 1, noteTitle.split('')[0].toUpperCase());
+    noteContent = await encrypt(noteContent);
 
     String id = (widget.noteId.isNotEmpty) ? widget.noteId : _noteId(noteTitle);
 
@@ -164,28 +166,30 @@ class _NewNoteState extends State<NewNote> {
           ],
         ),
       ),
-      floatingActionButton: read ? null : FloatingActionButton(
-        child: Icon(
-          Icons.save,
-          color: Colors.white,
-          size: 30,
-        ),
-        onPressed: () {
-          if (!validate(_titleCtrl.text)) {
-            setState(() {
-              validatation = false;
-            });
-            return;
-          }
-          if (!validate(_contentCtrl.text)) {
-            Utils.dispToast('Can\'t add an empty note !!!');
-            return;
-          }
+      floatingActionButton: read
+          ? null
+          : FloatingActionButton(
+              child: Icon(
+                Icons.save,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
+                if (!validate(_titleCtrl.text)) {
+                  setState(() {
+                    validatation = false;
+                  });
+                  return;
+                }
+                if (!validate(_contentCtrl.text)) {
+                  Utils.dispToast('Can\'t add an empty note !!!');
+                  return;
+                }
 
-          _addNote();
-        },
-        backgroundColor: AppColors.bgtColor,
-      ),
+                _addNote();
+              },
+              backgroundColor: AppColors.bgtColor,
+            ),
     );
   }
 }
