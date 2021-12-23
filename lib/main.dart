@@ -12,6 +12,7 @@ import 'package:test_app/providers/credentials.dart';
 import 'package:test_app/providers/notes.dart';
 import 'package:test_app/view/settingsPage.dart';
 import 'package:test_app/view/widgets/newNote.dart';
+import 'package:test_app/view/widgets/setPassword.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
@@ -69,7 +70,17 @@ class _CalculatorState extends State<Calculator> {
   }
 
   Future<void> fetchAndSetPwds() async {
-    HiveHandler h = HiveHandler('data');
+    HiveHandler h = HiveHandler('login');
+
+    if (await h.hiveEmpty()) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SetPassword();
+        },
+      );
+    }
+
     Map<String, dynamic> data = await h.read();
     p1 = await decrypt(data['p1']);
     p2 = await decrypt(data['p2']);

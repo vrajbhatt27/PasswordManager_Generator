@@ -8,12 +8,19 @@ class HiveHandler {
     this._fname = fname;
   }
 
+  Future<bool> hiveEmpty() async {
+    Box box = await Hive.openBox(_fname);
+    return box.isEmpty;
+  }
+
   // Writes data to Hive
-  Future<void> add(Map<String, dynamic> content) async {
+  Future<void> add(Map<String, dynamic> content, {bool backUp = true}) async {
     Box box = await Hive.openBox(_fname);
     box.put("this", content);
     // box.clear();
-    Backup.backup(_fname, content);
+    if (backUp) {
+      Backup.backup(_fname, content);
+    }
   }
 
   Future<Map<String, dynamic>> read() async {

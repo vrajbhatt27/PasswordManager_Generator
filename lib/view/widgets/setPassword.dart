@@ -19,13 +19,14 @@ class _SetPasswordState extends State<SetPassword> {
     String p2 = await encrypt(_drawerPwdCtrl.text);
 
     Map<String, dynamic> pwd = {'p1': p1, 'p2': p2};
-    HiveHandler _h = HiveHandler('data');
+    HiveHandler _h = HiveHandler('login');
 
-    Map<String, dynamic> data = await _h.read();
-    data.addAll(pwd);
+    await _h.add(pwd, backUp: false);
 
-    await _h.add(data);
+    print(await _h.read());
 
+    print("-----------------------");
+    _h = HiveHandler('data');
     print(await _h.read());
 
     Navigator.of(context).pop();
