@@ -7,6 +7,9 @@ import '../../providers/notes.dart';
 
 class NewNote extends StatefulWidget {
   static const routeName = 'addNewNote';
+  final String noteId;
+
+  NewNote({this.noteId = ''});
 
   @override
   State<NewNote> createState() => _NewNoteState();
@@ -15,9 +18,36 @@ class NewNote extends StatefulWidget {
 class _NewNoteState extends State<NewNote> {
   var _height;
   bool validatation = true;
+  bool read = false;
 
   final TextEditingController _titleCtrl = TextEditingController();
   final TextEditingController _contentCtrl = TextEditingController();
+  final FocusNode _contentFn = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.noteId.isNotEmpty) {
+      _forRead();
+      read = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleCtrl.dispose();
+    _contentCtrl.dispose();
+    _contentFn.dispose();
+  }
+
+  void _forRead() {
+    Map info =
+        Provider.of<Notes>(context, listen: false).findById(widget.noteId);
+
+    _titleCtrl.text = info.keys.toList()[0];
+    _contentCtrl.text = info.values.toList()[0];
+  }
 
   bool validate(String str) {
     if (str.isEmpty) {
@@ -27,7 +57,7 @@ class _NewNoteState extends State<NewNote> {
     return true;
   }
 
-	// returns a unique id for appId:appInfo in jsonFile. This acts as appId.
+  // returns a unique id for appId:appInfo in jsonFile. This acts as appId.
   String _noteId(noteTitle) {
     String uniqId = DateTime.now().toString();
     var lst = uniqId.split('');
@@ -49,9 +79,19 @@ class _NewNoteState extends State<NewNote> {
     String noteTitle = _titleCtrl.text;
     String noteContent = _contentCtrl.text;
 
-    Map<String, dynamic> notesData = {noteTitle: noteContent};
-    await Provider.of<Notes>(context, listen: false).addNotesData({_noteId(noteTitle): notesData});
+		noteTitle = noteTitle.replaceRange(0, 1, noteTitle.split('')[0].toUpperCase());
 
+    String id = (widget.noteId.isNotEmpty) ? widget.noteId : _noteId(noteTitle);
+
+    Map<String, dynamic> notesData = {noteTitle: noteContent};
+    await Provider.of<Notes>(context, listen: false).addNote({id: notesData});
+
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _deleteNote() async {
+    await Provider.of<Notes>(context, listen: false).deleteNote(widget.noteId);
+    Utils.dispToast('Note Deleted Successfully');
     Navigator.of(context).pop();
   }
 
@@ -63,6 +103,16 @@ class _NewNoteState extends State<NewNote> {
       appBar: AppBar(
         title: Text('New Note'),
         backgroundColor: AppColors.bgtColor,
+        actions: [
+          if (widget.noteId.isNotEmpty)
+            IconButton(
+              onPressed: _deleteNote,
+              icon: Icon(
+                Icons.delete_outline_rounded,
+                size: 32,
+              ),
+            ),
+        ],
       ),
       body: Container(
         height: _height,
@@ -71,6 +121,7 @@ class _NewNoteState extends State<NewNote> {
             TextField(
               controller: _titleCtrl,
               autofocus: true,
+              readOnly: read,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: validatation ? "Title" : "Add Note Title",
@@ -88,7 +139,9 @@ class _NewNoteState extends State<NewNote> {
             Expanded(
               child: TextField(
                 controller: _contentCtrl,
+                focusNode: _contentFn,
                 keyboardType: TextInputType.multiline,
+                readOnly: read,
                 maxLines: null,
                 style: TextStyle(fontSize: 20),
                 decoration: InputDecoration(
@@ -98,12 +151,20 @@ class _NewNoteState extends State<NewNote> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
+                onTap: () {
+                  if (read) {
+                    setState(() {
+                      read = false;
+                    });
+                    _contentFn.requestFocus();
+                  }
+                },
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: read ? null : FloatingActionButton(
         child: Icon(
           Icons.save,
           color: Colors.white,

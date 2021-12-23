@@ -164,8 +164,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               // app bar
               Container(
-                margin: EdgeInsets.fromLTRB(10, 50, 0, 5),
-                padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                margin: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
 
               // main body
               Container(
-                height: _height * 0.7,
+                height: _height * 0.73,
                 color: AppColors.backgroundColor,
                 child: noDataInFile
                     ? showMsgWhenEmptyFile()

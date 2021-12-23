@@ -16,7 +16,7 @@ class Notes extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addNotesData(Map<String, dynamic> content) async {
+  Future<void> addNote(Map<String, dynamic> content) async {
     _data.addAll(content);
     _h.add(_data);
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -24,19 +24,19 @@ class Notes extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> deleteData(noteId) async {
-  //   _data.remove(appId);
-  //   _h.add(_data);
-  //   print("############################################");
-  //   print(_data);
-  //   notifyListeners();
-  // }
+  Future<void> deleteNote(noteId) async {
+    _data.remove(noteId);
+    _h.add(_data);
+    print("############################################");
+    print(_data);
+    notifyListeners();
+  }
 
-  // findById(appId) {
-  //   if (_data.containsKey(appId)) {
-  //     return _data[appId];
-  //   }
+  findById(noteId) {
+    if (_data.containsKey(noteId)) {
+      return _data[noteId];
+    }
 
-  //   return null;
-  // }
+    return null;
+  }
 }
