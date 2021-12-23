@@ -11,6 +11,7 @@ import 'package:test_app/view/other/heroDialogRoute.dart';
 import 'package:test_app/view/other/styles.dart';
 import 'package:test_app/view/widgets/generatePwdCard.dart';
 import 'package:test_app/view/widgets/secMsgCard.dart';
+import 'package:test_app/view/widgets/setPassword.dart';
 
 class SettingsPage extends StatelessWidget {
   static const routeName = '/settings';
@@ -59,10 +60,19 @@ class SettingsPage extends StatelessWidget {
     data = await HiveHandler('data').read();
     Backup.backup('data', data);
 
-		data = Provider.of<Notes>(context, listen: false).notesData;
+    data = Provider.of<Notes>(context, listen: false).notesData;
     Backup.backup('notes', data);
 
     Utils.dispToast('Data Exported Successfully');
+  }
+
+  void _changePassword({BuildContext context}) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SetPassword();
+      },
+    );
   }
 
   @override
@@ -80,6 +90,7 @@ class SettingsPage extends StatelessWidget {
           GridCard('Secret\nMessage', _openSecretMsg),
           GridCard('Import\nData', _importData),
           GridCard('Export\nData', _exportData),
+          GridCard('Change\nPassword', _changePassword),
         ],
       ),
     );
@@ -98,19 +109,18 @@ class GridCard extends StatelessWidget {
       color: AppColors.bgtColor,
       margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       child: InkWell(
-				child: Center(
-					child: Text(
-						_title,
-						style: TextStyle(
-							fontSize: 24,
-							fontWeight: FontWeight.bold,
-						),
-						textAlign: TextAlign.center,
-					),
-				),
-
-				onTap: () => _action(context: context),
-			),
+        child: Center(
+          child: Text(
+            _title,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        onTap: () => _action(context: context),
+      ),
     );
   }
 }

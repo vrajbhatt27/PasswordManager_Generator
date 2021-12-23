@@ -14,27 +14,20 @@ class _SetPasswordState extends State<SetPassword> {
 
   final TextEditingController _drawerPwdCtrl = TextEditingController();
 
-	static Future<void> setPasswords(String p1, String p2, {bool isNew = false}) async {
-    p1 = await encrypt(p1);
-    p2 = await encrypt(p2);
+  _savePasswords() async {
+    String p1 = await encrypt(_mainPwdCtrl.text);
+    String p2 = await encrypt(_drawerPwdCtrl.text);
 
     Map<String, dynamic> pwd = {'p1': p1, 'p2': p2};
     HiveHandler _h = HiveHandler('data');
 
-    if (isNew) {
-      await _h.add(pwd);
-    } else {
-      Map<String, dynamic> data = await _h.read();
-      data.addAll(pwd);
+    Map<String, dynamic> data = await _h.read();
+    data.addAll(pwd);
 
-      await _h.add(data);
+    await _h.add(data);
 
-      print(await _h.read());
-    }
-  }
+    print(await _h.read());
 
-  _savePasswords() async {
-    await setPasswords(_mainPwdCtrl.text, _drawerPwdCtrl.text);
     Navigator.of(context).pop();
   }
 

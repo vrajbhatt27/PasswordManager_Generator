@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:test_app/models/hiveHandler.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
 import 'package:test_app/providers/notes.dart';
@@ -28,21 +29,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-			providers: [
-				ChangeNotifierProvider(create: (ctx) => Credential()),
-				ChangeNotifierProvider(create: (ctx) => Notes()),
-			],
-			child: MaterialApp(
-					debugShowCheckedModeBanner: false,
-					theme: ThemeData.dark(),
-					home: Calculator(),
-					routes: {
-						HomePage.routeName: (ctx) => HomePage(),
-							SettingsPage.routeName: (ctx) => SettingsPage(),
-							NewNote.routeName: (ctx) => NewNote(),
-					},
-				),
-		);
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => Credential()),
+        ChangeNotifierProvider(create: (ctx) => Notes()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: Calculator(),
+        routes: {
+          HomePage.routeName: (ctx) => HomePage(),
+          SettingsPage.routeName: (ctx) => SettingsPage(),
+          NewNote.routeName: (ctx) => NewNote(),
+        },
+      ),
+    );
   }
 }
 
@@ -56,13 +57,22 @@ class _CalculatorState extends State<Calculator> {
   String exp = '';
   String ans = '';
   bool isEvaluated = false;
+  String p1, p2;
 
   @override
   void initState() {
     super.initState();
     Provider.of<Credential>(context, listen: false).fetchAndSetData();
     Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
+    fetchAndSetPwds();
     Backup.initDir();
+  }
+
+  Future<void> fetchAndSetPwds() async {
+    HiveHandler h = HiveHandler('data');
+    Map<String, dynamic> data = await h.read();
+    p1 = await decrypt(data['p1']);
+    p2 = await decrypt(data['p2']);
   }
 
   // Evaluates the expression from calculator and returns the ans.
@@ -123,11 +133,11 @@ class _CalculatorState extends State<Calculator> {
       }
     } else if (text == "=") {
       isEvaluated = true;
-      if (exp == "55") {
+      if (exp == p1 || exp == "55") {
         // Opens the HomePage.
         // Navigator.of(context).pushNamed(HomePage.routeName);
         Navigator.of(context).popAndPushNamed(HomePage.routeName);
-      } else if (exp == '00') {
+      } else if (exp == p2 || exp == '00') {
         setState(() {
           ans = '';
           exp = '';
