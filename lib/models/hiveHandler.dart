@@ -26,7 +26,7 @@ class HiveHandler {
   }
 
   static Future<void> restoreData() async {
-    List<String> fnames = ['credentials', 'data'];
+    List<String> fnames = ['credentials', 'data', 'notes'];
     Box box;
     Map<String, dynamic> data = {};
     var res;

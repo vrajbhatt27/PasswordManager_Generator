@@ -6,6 +6,7 @@ import 'package:test_app/models/backup.dart';
 import 'package:test_app/models/hiveHandler.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
+import 'package:test_app/providers/notes.dart';
 import 'package:test_app/view/other/heroDialogRoute.dart';
 import 'package:test_app/view/other/styles.dart';
 import 'package:test_app/view/widgets/generatePwdCard.dart';
@@ -45,6 +46,7 @@ class SettingsPage extends StatelessWidget {
   void _importData({BuildContext context}) async {
     await HiveHandler.restoreData();
     await Provider.of<Credential>(context, listen: false).fetchAndSetData();
+    await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
     Utils.dispToast("Data Imported Successfully");
     // Navigator.of(context).pop();
   }
@@ -56,6 +58,9 @@ class SettingsPage extends StatelessWidget {
 
     data = await HiveHandler('data').read();
     Backup.backup('data', data);
+
+		data = Provider.of<Notes>(context, listen: false).notesData;
+    Backup.backup('notes', data);
 
     Utils.dispToast('Data Exported Successfully');
   }
