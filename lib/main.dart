@@ -8,7 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/models/passwordGenerator.dart';
 import 'package:test_app/providers/credentials.dart';
+import 'package:test_app/providers/notes.dart';
 import 'package:test_app/view/settingsPage.dart';
+import 'package:test_app/view/widgets/newNote.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
@@ -25,18 +27,22 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Credential>(
-      create: (ctx) => Credential(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
-        home: Calculator(),
-        routes: {
-          HomePage.routeName: (ctx) => HomePage(),
-					SettingsPage.routeName: (ctx) => SettingsPage(),
-        },
-      ),
-    );
+    return MultiProvider(
+			providers: [
+				ChangeNotifierProvider(create: (ctx) => Credential()),
+				ChangeNotifierProvider(create: (ctx) => Notes()),
+			],
+			child: MaterialApp(
+					debugShowCheckedModeBanner: false,
+					theme: ThemeData.dark(),
+					home: Calculator(),
+					routes: {
+						HomePage.routeName: (ctx) => HomePage(),
+							SettingsPage.routeName: (ctx) => SettingsPage(),
+							NewNote.routeName: (ctx) => NewNote(),
+					},
+				),
+		);
   }
 }
 
@@ -55,6 +61,7 @@ class _CalculatorState extends State<Calculator> {
   void initState() {
     super.initState();
     Provider.of<Credential>(context, listen: false).fetchAndSetData();
+    Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
     Backup.initDir();
   }
 

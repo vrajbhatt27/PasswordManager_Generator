@@ -12,7 +12,7 @@ class HiveHandler {
   Future<void> add(Map<String, dynamic> content) async {
     Box box = await Hive.openBox(_fname);
     box.put("this", content);
-    // _box.clear();
+    // box.clear();
     Backup.backup(_fname, content);
   }
 

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/providers/credentials.dart';
+import 'package:test_app/providers/notes.dart';
 import 'package:test_app/view/settingsPage.dart';
+import 'package:test_app/view/widgets/newNote.dart';
+import 'package:test_app/view/widgets/showNotes.dart';
 import './other/styles.dart';
 import './widgets/NewData.dart';
 import './widgets/ShowData.dart';
@@ -19,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   var _height;
   bool _notesSelected = false;
 
-  // Opens ModalBottomSheet. It calls NewData. Here if it is opening for update then appId is also passed.
+  // Opens ModalBottomSheet. It calls NewData(for credentials). Here if it is opening for update then appId is also passed.
   void _addNewData(BuildContext ctx, {String appId = ''}) {
     bool update = false;
     if (appId.isNotEmpty) {
@@ -94,7 +97,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     bool noDataInFile =
-        _notesSelected ? true : Provider.of<Credential>(context).data.isEmpty;
+        _notesSelected ? Provider.of<Notes>(context).notesData.isEmpty : Provider.of<Credential>(context).data.isEmpty;
     _height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: globalKey,
@@ -189,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                 child: noDataInFile
                     ? showMsgWhenEmptyFile()
                     : _notesSelected
-                        ? Text("Show Notes")
+                        ? ShowNotes()
                         : ShowData(_addNewData),
               ),
             ],
@@ -225,7 +228,9 @@ class _HomePageState extends State<HomePage> {
             labelStyle:
                 TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             labelBackgroundColor: Colors.white,
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed(NewNote.routeName);
+            },
           ),
         ],
       ),
