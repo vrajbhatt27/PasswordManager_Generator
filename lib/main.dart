@@ -80,7 +80,7 @@ class _CalculatorState extends State<Calculator> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-					backgroundColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.backgroundColor,
           title: Text(
             'Permission Error',
             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -117,8 +117,9 @@ class _CalculatorState extends State<Calculator> {
     }
 
     Map<String, dynamic> data = await h.read();
-    _p1 = await decrypt(data['p1']);
-    _p2 = await decrypt(data['p2']);
+    print(data);
+    _p1 = data['p1'];
+    _p2 = data['p2'];
   }
 
   // Evaluates the expression from calculator and returns the ans.

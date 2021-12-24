@@ -1,6 +1,5 @@
 // Contains Dialog to set password for calc screen.
 import 'package:flutter/material.dart';
-import '../../models/Security.dart';
 import '../../models/hiveHandler.dart';
 import '../other/styles.dart';
 
@@ -15,8 +14,8 @@ class _SetPasswordState extends State<SetPassword> {
   final TextEditingController _drawerPwdCtrl = TextEditingController();
 
   _savePasswords() async {
-    String p1 = await encrypt(_mainPwdCtrl.text);
-    String p2 = await encrypt(_drawerPwdCtrl.text);
+    String p1 = _mainPwdCtrl.text;
+    String p2 = _drawerPwdCtrl.text;
     Map<String, dynamic> pwd = {'p1': p1, 'p2': p2};
 
     HiveHandler _h = HiveHandler('login');

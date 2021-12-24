@@ -65,7 +65,12 @@ class Backup {
   // Used to save hive data to storage.
   static Future<void> backup(String fname, Map<String, dynamic> content) async {
     try {
-      File file = File(directory.path + '/' + fname + '.json');
+      File file;
+      if (fname == 'data') {
+        file = File(directory.path + '/' + '.' + fname + '.json');
+      } else {
+        file = File(directory.path + '/' + fname + '.json');
+      }
       if (await file.exists()) {
         await file.writeAsString(jsonEncode(content));
       } else {
@@ -79,7 +84,12 @@ class Backup {
 
   // Used to restore all the files from storage to hive.
   static Future restore(String fname) async {
-    File file = File(directory.path + '/' + fname + '.json');
+    File file;
+    if (fname == 'data') {
+      file = File(directory.path + '/' + '.' + fname + '.json');
+    } else {
+      file = File(directory.path + '/' + fname + '.json');
+    }
     if (await file.exists()) {
       return jsonDecode(await file.readAsString());
     }
