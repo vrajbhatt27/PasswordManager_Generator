@@ -1,10 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/passwordGenerator.dart';
-import 'package:test_app/providers/credentials.dart';
+import '../../models/passwordGenerator.dart';
+import '../../providers/credentials.dart';
 import './popupCard.dart';
 import '../../models/Security.dart';
 import '../other/styles.dart';

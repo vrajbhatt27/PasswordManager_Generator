@@ -2,11 +2,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/providers/credentials.dart';
-import 'package:test_app/providers/notes.dart';
-import 'package:test_app/view/settingsPage.dart';
-import 'package:test_app/view/widgets/newNote.dart';
-import 'package:test_app/view/widgets/showNotes.dart';
+import '../providers/credentials.dart';
+import '../providers/notes.dart';
+import './settingsPage.dart';
+import './widgets/newNote.dart';
+import './widgets/showNotes.dart';
 import './other/styles.dart';
 import './widgets/NewData.dart';
 import './widgets/ShowData.dart';
@@ -33,8 +33,6 @@ class _HomePageState extends State<HomePage> {
       context: ctx,
       isScrollControlled: true,
       barrierColor: Colors.black54,
-      //! ### modal bottom sheet bg color
-      // backgroundColor: Color(0xFF1F2426),
       backgroundColor: AppColors.backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -71,12 +69,9 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          GestureDetector(
-            onTap: () => _addNewData(context),
-            child: Image.asset(
-              'assets/Images/EmptyFile.png',
-              scale: 2,
-            ),
+          Image.asset(
+            'assets/Images/EmptyFile.png',
+            scale: 2,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),

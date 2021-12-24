@@ -6,13 +6,13 @@ import 'package:hive/hive.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/hiveHandler.dart';
-import 'package:test_app/models/passwordGenerator.dart';
-import 'package:test_app/providers/credentials.dart';
-import 'package:test_app/providers/notes.dart';
-import 'package:test_app/view/settingsPage.dart';
-import 'package:test_app/view/widgets/newNote.dart';
-import 'package:test_app/view/widgets/setPassword.dart';
+import './models/hiveHandler.dart';
+import './models/passwordGenerator.dart';
+import './providers/credentials.dart';
+import './providers/notes.dart';
+import './view/settingsPage.dart';
+import './view/widgets/newNote.dart';
+import './view/widgets/setPassword.dart';
 import './view/other/styles.dart';
 import './view/HomePage.dart';
 import './models/Security.dart';
@@ -69,9 +69,11 @@ class _CalculatorState extends State<Calculator> {
     Backup.initDir();
   }
 
+  // Sets the p1(main password) and p2(drawer).
   Future<void> fetchAndSetPwds() async {
     HiveHandler h = HiveHandler('login');
 
+    // If the user is newly installed then dialog is shown to set p1 and p2.
     if (await h.hiveEmpty()) {
       await showDialog(
         context: context,
@@ -144,11 +146,11 @@ class _CalculatorState extends State<Calculator> {
       }
     } else if (text == "=") {
       isEvaluated = true;
-      if (exp == p1 || exp == "55") {
+      if (exp == p1) {
         // Opens the HomePage.
         // Navigator.of(context).pushNamed(HomePage.routeName);
         Navigator.of(context).popAndPushNamed(HomePage.routeName);
-      } else if (exp == p2 || exp == '00') {
+      } else if (exp == p2) {
         setState(() {
           ans = '';
           exp = '';
@@ -362,7 +364,9 @@ class _DrawerContentState extends State<DrawerContent> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage("assets/Images/drawerbg.png"), fit: BoxFit.cover),
+          image: AssetImage("assets/Images/drawerbg.png"),
+          fit: BoxFit.cover,
+        ),
       ),
       child: Consumer<Credential>(
         builder: (ctx, credential, _) => ListView.builder(

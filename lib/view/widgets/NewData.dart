@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/providers/credentials.dart';
+import '../../providers/credentials.dart';
 import '../other/styles.dart';
 import '../../models/Security.dart';
 
@@ -59,6 +59,7 @@ class _NewData extends State<NewData> {
     _mnoCtrl.dispose();
     _otherCtrl.dispose();
 
+    _appFocusNode.dispose();
     _emailFocusNode.dispose();
     _unameFocusNode.dispose();
     _pwdFocusNode.dispose();
@@ -85,7 +86,7 @@ class _NewData extends State<NewData> {
     return app + id;
   }
 
-  // It calls the _callWrite2File() of main.dart. Here first appInfo is set and then appId and appInfo are passed as arg to above function. Here if it is called for update operation then new id is not calculated.
+  // It calls the _addData of HiveHandler of main.dart. Here first appInfo is set and then appId and appInfo are passed as arg to above function. Here if it is called for update operation then new id is not calculated.
   void _addData({String id = ''}) async {
     String pwd = _pwdCtrl.text;
     String encPwd;
@@ -95,8 +96,6 @@ class _NewData extends State<NewData> {
     } else {
       encPwd = '';
     }
-
-    print('(In NewData)cipher text--> ' + encPwd.toString());
 
     // Validation for first letter of App name to be capital.
     _appCtrl.text = (_appCtrl.text)
@@ -127,10 +126,6 @@ class _NewData extends State<NewData> {
 
     String appId = id.isEmpty ? _addId(_appCtrl.text) : id;
     Provider.of<Credential>(context, listen: false).addData({appId: _appInfo});
-    print('-------------\n');
-    print(appId);
-    print(_appInfo);
-    print('-------------\n');
     Navigator.of(context).pop();
   }
 
@@ -307,7 +302,6 @@ class _NewData extends State<NewData> {
           height: MediaQuery.of(context).size.height * 0.7,
           padding:
               const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
-          // margin: EdgeInsets.only(bottom: 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,

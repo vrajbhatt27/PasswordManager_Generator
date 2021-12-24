@@ -2,16 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/backup.dart';
-import 'package:test_app/models/hiveHandler.dart';
-import 'package:test_app/models/passwordGenerator.dart';
-import 'package:test_app/providers/credentials.dart';
-import 'package:test_app/providers/notes.dart';
-import 'package:test_app/view/other/heroDialogRoute.dart';
-import 'package:test_app/view/other/styles.dart';
-import 'package:test_app/view/widgets/generatePwdCard.dart';
-import 'package:test_app/view/widgets/secMsgCard.dart';
-import 'package:test_app/view/widgets/setPassword.dart';
+import '../models/backup.dart';
+import '../models/hiveHandler.dart';
+import '../models/passwordGenerator.dart';
+import '../providers/credentials.dart';
+import '../providers/notes.dart';
+import './other/heroDialogRoute.dart';
+import './other/styles.dart';
+import './widgets/generatePwdCard.dart';
+import './widgets/secMsgCard.dart';
+import './widgets/setPassword.dart';
 
 class SettingsPage extends StatelessWidget {
   static const routeName = '/settings';
@@ -48,8 +48,8 @@ class SettingsPage extends StatelessWidget {
     await HiveHandler.restoreData();
     await Provider.of<Credential>(context, listen: false).fetchAndSetData();
     await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
+    //! Optimization: If success then only show this.
     Utils.dispToast("Data Imported Successfully");
-    // Navigator.of(context).pop();
   }
 
   void _exportData({BuildContext context}) async {
@@ -63,6 +63,7 @@ class SettingsPage extends StatelessWidget {
     data = Provider.of<Notes>(context, listen: false).notesData;
     Backup.backup('notes', data);
 
+    //! Optimization: If success then only show this.
     Utils.dispToast('Data Exported Successfully');
   }
 

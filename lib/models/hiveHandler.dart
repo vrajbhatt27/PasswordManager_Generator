@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
-import 'backup.dart';
+import './passwordGenerator.dart';
+import './backup.dart';
 
 class HiveHandler {
   String _fname;
@@ -8,16 +9,17 @@ class HiveHandler {
     this._fname = fname;
   }
 
+  // returns true if hive is empty.
   Future<bool> hiveEmpty() async {
     Box box = await Hive.openBox(_fname);
     return box.isEmpty;
   }
 
-  // Writes data to Hive
+  // Writes data to Hive.
   Future<void> add(Map<String, dynamic> content, {bool backUp = true}) async {
     Box box = await Hive.openBox(_fname);
     box.put("this", content);
-    // box.clear();
+    // If Backup is false then only hive will be created and not the file in storage.
     if (backUp) {
       Backup.backup(_fname, content);
     }
@@ -40,7 +42,7 @@ class HiveHandler {
     for (var fname in fnames) {
       res = await Backup.restore(fname);
       if (res == null) {
-        print("File Not Found");
+        Utils.dispToast('File Not Found');
         continue;
       }
 
@@ -48,7 +50,5 @@ class HiveHandler {
       box = await Hive.openBox(fname);
       box.put("this", data);
     }
-
-    print("All Data Restored");
   }
 }

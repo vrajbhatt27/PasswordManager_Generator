@@ -1,7 +1,7 @@
 import 'package:encrypt/encrypt.dart' as crypto;
-import 'package:test_app/models/hiveHandler.dart';
+import './hiveHandler.dart';
 
-// If not present creates new key and iv and then calls write2file of FileHandler and creates new file.
+// If not present creates new key and iv and then stores that in Hive.
 Future<bool> createFile() async {
   final key = crypto.Key.fromUtf8('#E6@O`Xp9fD4T(,!^"w:l!V81sMFca2l');
   final iv = crypto.IV.fromLength(16);
@@ -23,11 +23,8 @@ Future encrypt(String pwd) async {
     await createFile();
   }
 
+	//! Optimization
   data = await h.read();
-
-  print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-  print(data);
-  print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
   final key = crypto.Key.fromBase64(data['key']);
   final iv = crypto.IV.fromBase64(data['iv']);
@@ -35,7 +32,6 @@ Future encrypt(String pwd) async {
   final encryptor = crypto.Encrypter(crypto.AES(key));
 
   String cipher = encryptor.encrypt(pwd, iv: iv).base64;
-  print(cipher);
   return cipher;
 }
 
@@ -53,7 +49,6 @@ Future decrypt(String cipher) async {
   crypto.Encrypted e = crypto.Encrypted.fromBase64(cipher);
 
   String pwd = encryptor.decrypt(e, iv: iv);
-  print(pwd);
   return pwd;
 }
 

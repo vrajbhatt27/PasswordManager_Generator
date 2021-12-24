@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/Security.dart';
-import 'package:test_app/models/passwordGenerator.dart';
-import 'package:test_app/view/other/styles.dart';
+import '../../models/Security.dart';
+import '../../models/passwordGenerator.dart';
+import '../other/styles.dart';
 import '../../providers/notes.dart';
 
 class NewNote extends StatefulWidget {
@@ -24,9 +24,11 @@ class _NewNoteState extends State<NewNote> {
   final TextEditingController _contentCtrl = TextEditingController();
   final FocusNode _contentFn = FocusNode();
 
+
   @override
   void initState() {
     super.initState();
+		// Checks if the note is for reading.
     if (widget.noteId.isNotEmpty) {
       _forRead();
       read = true;
@@ -41,6 +43,7 @@ class _NewNoteState extends State<NewNote> {
     _contentFn.dispose();
   }
 
+	// If it is for read, then both the text fields are filled with the data.
   Future<void> _forRead() async{
     Map info =
         Provider.of<Notes>(context, listen: false).findById(widget.noteId);
@@ -49,6 +52,7 @@ class _NewNoteState extends State<NewNote> {
     _contentCtrl.text = await decrypt(info.values.toList()[0]);
   }
 
+	// Checks if the textFields are not empty.
   bool validate(String str) {
     if (str.isEmpty) {
       return false;
@@ -57,7 +61,7 @@ class _NewNoteState extends State<NewNote> {
     return true;
   }
 
-  // returns a unique id for appId:appInfo in jsonFile. This acts as appId.
+  // returns a unique id for noteId:noteInfo in jsonFile. 
   String _noteId(noteTitle) {
     String uniqId = DateTime.now().toString();
     var lst = uniqId.split('');
@@ -75,6 +79,7 @@ class _NewNoteState extends State<NewNote> {
     return noteTitle + id;
   }
 
+	// Used to add the note to hive. Here if it is for updating then the _noteId is not calculated and the just the data is updated for existing noteId.
   Future<void> _addNote() async {
     String noteTitle = _titleCtrl.text;
     String noteContent = _contentCtrl.text;
@@ -91,6 +96,7 @@ class _NewNoteState extends State<NewNote> {
     Navigator.of(context).pop();
   }
 
+	// For deleting note
   Future<void> _deleteNote() async {
     await Provider.of<Notes>(context, listen: false).deleteNote(widget.noteId);
     Utils.dispToast('Note Deleted Successfully');

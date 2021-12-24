@@ -1,8 +1,8 @@
 // Contains Dialog to set password for calc screen.
 import 'package:flutter/material.dart';
-import 'package:test_app/models/Security.dart';
-import 'package:test_app/models/hiveHandler.dart';
-import 'package:test_app/view/other/styles.dart';
+import '../../models/Security.dart';
+import '../../models/hiveHandler.dart';
+import '../other/styles.dart';
 
 class SetPassword extends StatefulWidget {
   @override
@@ -17,18 +17,10 @@ class _SetPasswordState extends State<SetPassword> {
   _savePasswords() async {
     String p1 = await encrypt(_mainPwdCtrl.text);
     String p2 = await encrypt(_drawerPwdCtrl.text);
-
     Map<String, dynamic> pwd = {'p1': p1, 'p2': p2};
+
     HiveHandler _h = HiveHandler('login');
-
     await _h.add(pwd, backUp: false);
-
-    print(await _h.read());
-
-    print("-----------------------");
-    _h = HiveHandler('data');
-    print(await _h.read());
-
     Navigator.of(context).pop();
   }
 

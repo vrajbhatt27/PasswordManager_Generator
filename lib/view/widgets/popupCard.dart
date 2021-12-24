@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/Security.dart';
-import 'package:test_app/providers/credentials.dart';
+import '../../models/Security.dart';
+import '../../providers/credentials.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
 
@@ -60,20 +60,24 @@ class _PopUpCardState extends State<PopUpCard> {
   // returns list of Text that contains all the info of selected app except password.
   List<Widget> cardContent() {
     List<Widget> lst = [];
-    info.forEach((key, value) {
-      if (key != 'password' && key != 'app') {
-        lst.add(showText(key, value));
-        lst.add(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Divider(
-            height: 5,
-            color: AppColors.backgroundColor,
-            endIndent: 7,
-            indent: 7,
-          ),
-        ));
-      }
-    });
+    info.forEach(
+      (key, value) {
+        if (key != 'password' && key != 'app') {
+          lst.add(showText(key, value));
+          lst.add(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Divider(
+                height: 5,
+                color: AppColors.backgroundColor,
+                endIndent: 7,
+                indent: 7,
+              ),
+            ),
+          );
+        }
+      },
+    );
 
     return lst;
   }
@@ -99,48 +103,37 @@ class _PopUpCardState extends State<PopUpCard> {
         });
   }
 
-  /* ListTile(
-      leading: Text('Password: '),
-      title: Text(pwdTitle),
-      onTap: () async {
-        String cipher = widget.info['password'];
-        String pwd = await decrypt(cipher);
-        setState(() {
-          pwdTitle = pwd;
-        });
-      },
-    )*/
-
   // It is the main widget that is given to child of Dialog. It contains a column that calls cardContent and password if present.
   Widget popUpContent() {
     return Container(
-        height: height * 0.4,
-        width: width * 0.5,
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.popUpCardColor,
-          borderRadius: BorderRadius.circular(16),
+      height: height * 0.4,
+      width: width * 0.5,
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.popUpCardColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              info['app'],
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.backgroundColor,
+                fontSize: 24,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ...cardContent(),
+            if (info.containsKey('password')) password(),
+          ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                info['app'],
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.backgroundColor,
-                  fontSize: 24,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ...cardContent(),
-              if (info.containsKey('password')) password(),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 
   @override

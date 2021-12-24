@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_app/models/passwordGenerator.dart';
-import 'package:test_app/providers/notes.dart';
-import 'package:test_app/view/other/styles.dart';
-import 'package:test_app/view/widgets/newNote.dart';
+import '../../models/passwordGenerator.dart';
+import '../../providers/notes.dart';
+import '../other/styles.dart';
+import './newNote.dart';
 
 class ShowNotes extends StatelessWidget {
   @override

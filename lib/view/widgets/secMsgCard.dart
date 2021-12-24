@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:test_app/models/passwordGenerator.dart';
+import '../../models/passwordGenerator.dart';
 import '../other/styles.dart';
 import '../other/customRectTween.dart';
 import '../../models/Security.dart';
@@ -139,19 +139,3 @@ class SecretMsgCardState extends State<SecretMsgCard> {
     );
   }
 }
-
-/* TextButton(
-              onPressed: () {
-                FlutterClipboard.copy(pwd);
-                dispToast('Copied To Clipboard');
-              },
-              child: Text(
-                'Copy',
-                style: TextStyle(
-                  color: AppColors.backgroundColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
- */
