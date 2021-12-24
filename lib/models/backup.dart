@@ -9,7 +9,7 @@ class Backup {
   static Directory directory;
 
   // This method is for initializing external directory.
-  static Future<void> initDir() async {
+  static Future<bool> initDir() async {
     try {
       if (Platform.isAndroid) {
         if (await _requestPermission(Permission.manageExternalStorage)) {
@@ -37,6 +37,12 @@ class Backup {
     } catch (e) {
       Utils.dispToast('Something Went Wrong !!!');
     }
+
+    if (directory != null) {
+      return true;
+    }
+
+    return false;
   }
 
   static Future<bool> _requestPermission(Permission permission) async {
@@ -56,7 +62,7 @@ class Backup {
     }
   }
 
-	// Used to save hive data to storage.
+  // Used to save hive data to storage.
   static Future<void> backup(String fname, Map<String, dynamic> content) async {
     try {
       File file = File(directory.path + '/' + fname + '.json');
@@ -71,7 +77,7 @@ class Backup {
     }
   }
 
-	// Used to restore all the files from storage to hive.
+  // Used to restore all the files from storage to hive.
   static Future restore(String fname) async {
     File file = File(directory.path + '/' + fname + '.json');
     if (await file.exists()) {

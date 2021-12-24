@@ -63,10 +63,43 @@ class _CalculatorState extends State<Calculator> {
   @override
   void initState() {
     super.initState();
+    Backup.initDir().then((value) {
+      if (value) {
+        _fetchAndSetPwds();
+      } else {
+        showError();
+      }
+    });
     Provider.of<Credential>(context, listen: false).fetchAndSetData();
     Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
-    _fetchAndSetPwds();
-    Backup.initDir();
+  }
+
+  // Show Error Dialog for permission not given.
+  showError() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+					backgroundColor: AppColors.backgroundColor,
+          title: Text(
+            'Permission Error',
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          content: Text('The App can\'t be used without storage permission'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                exit(0);
+              },
+              child: Text('Okay'),
+              style: ElevatedButton.styleFrom(
+                primary: AppColors.bgtColor,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Sets the p1(main password) and p2(drawer).
