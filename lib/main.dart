@@ -117,7 +117,6 @@ class _CalculatorState extends State<Calculator> {
     }
 
     Map<String, dynamic> data = await h.read();
-    print(data);
     _p1 = data['p1'];
     _p2 = data['p2'];
   }

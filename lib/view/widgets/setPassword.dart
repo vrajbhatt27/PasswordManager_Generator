@@ -13,6 +13,8 @@ class _SetPasswordState extends State<SetPassword> {
 
   final TextEditingController _drawerPwdCtrl = TextEditingController();
 
+  bool _validated = true;
+
   _savePasswords() async {
     String p1 = _mainPwdCtrl.text;
     String p2 = _drawerPwdCtrl.text;
@@ -70,20 +72,37 @@ class _SetPasswordState extends State<SetPassword> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ElevatedButton(
-                child: Text(
-                  'Save',
-                  style: TextStyle(fontSize: 18),
-                ),
-                style: ElevatedButton.styleFrom(
-                    primary: AppColors.backgroundColor),
-                onPressed: () async {
-                  await _savePasswords();
-                },
-              ),
-            ),
+            if (!_validated)
+              Expanded(
+								child: Text(
+									'Please Set both the passwords.',
+									style: TextStyle(color: Colors.red),
+								),
+							),
+
+            Expanded(
+							child: Container(
+								margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+								child: ElevatedButton(
+									child: Text(
+										'Save',
+										style: TextStyle(fontSize: 18),
+									),
+									style: ElevatedButton.styleFrom(
+											primary: AppColors.backgroundColor),
+									onPressed: () async {
+										if (_mainPwdCtrl.text.isNotEmpty &&
+												_drawerPwdCtrl.text.isNotEmpty) {
+											await _savePasswords();
+										} else {
+											setState(() {
+												_validated = false;
+											});
+										}
+									},
+								),
+							),
+						),
           ],
         ),
       ],
