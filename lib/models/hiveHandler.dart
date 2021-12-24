@@ -34,15 +34,21 @@ class HiveHandler {
     return content;
   }
 
-  static Future<void> restoreData() async {
+  static Future<Map<String, bool>> restoreData() async {
     List<String> fnames = ['credentials', 'data', 'notes'];
+    Map<String, bool> dataImported = {
+      'credentials': true,
+      'data': true,
+      'notes': true,
+    };
     Box box;
     Map<String, dynamic> data = {};
     var res;
     for (var fname in fnames) {
       res = await Backup.restore(fname);
       if (res == null) {
-        Utils.dispToast('File Not Found');
+        Utils.dispToast('No $fname available');
+        dataImported[fname] = false;
         continue;
       }
 
@@ -50,5 +56,7 @@ class HiveHandler {
       box = await Hive.openBox(fname);
       box.put("this", data);
     }
+
+    return dataImported;
   }
 }

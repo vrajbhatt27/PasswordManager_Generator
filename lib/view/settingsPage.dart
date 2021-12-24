@@ -45,14 +45,30 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _importData({BuildContext context}) async {
-    await HiveHandler.restoreData();
-    await Provider.of<Credential>(context, listen: false).fetchAndSetData();
-    await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
-    //! Optimization: If success then only show this.
-    Utils.dispToast("Data Imported Successfully");
+    Map<String, bool> restored = await HiveHandler.restoreData();
+
+    if (restored['credentials']) {
+      await Provider.of<Credential>(context, listen: false).fetchAndSetData();
+    }
+
+    if (restored['notes']) {
+      await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
+    }
+
+    if (restored['credentials'] && restored['notes'] && restored['data']) {
+      Utils.dispToast("Data Imported Successfully");
+    } else if (restored['credentials'] ||
+        restored['notes'] ||
+        restored['data']) {
+      Utils.dispToast('Available Data Imported Successfully');
+    } else {
+      Utils.dispToast('No Data Available');
+    }
   }
 
   void _exportData({BuildContext context}) async {
+    await Backup.initDir();
+
     Map<String, dynamic> data =
         Provider.of<Credential>(context, listen: false).data;
     Backup.backup('credentials', data);

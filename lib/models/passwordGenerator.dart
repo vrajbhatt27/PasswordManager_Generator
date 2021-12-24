@@ -3,26 +3,26 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../view/other/styles.dart';
 
 class Utils {
-  List lowerAlphabets = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  List upperAlphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  List nums = '0123456789'.split('');
-  List symbols = "!@#\$%^&*(){}<>.?/;:[]".split('');
+  List _lowerAlphabets = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  List _upperAlphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  List _nums = '0123456789'.split('');
+  List _symbols = "!@#\$%^&*(){}<>.?/;:[]".split('');
 
-  List pwd = [];
-  List freq = [4, 2, 4, 2];
-  List names = ['la', 'ua', 'nums', 'symbols'];
-  Map temp = {};
+  List _pwd = [];
+  List _freq = [4, 2, 4, 2];
+  List _names = ['la', 'ua', 'nums', 'symbols'];
+  Map _temp = {};
 
-  List getIdentifierList(String text) {
+  List _getIdentifierList(String text) {
     switch (text) {
       case 'la':
-        return lowerAlphabets;
+        return _lowerAlphabets;
       case 'ua':
-        return upperAlphabets;
+        return _upperAlphabets;
       case 'nums':
-        return nums;
+        return _nums;
       case 'symbols':
-        return symbols;
+        return _symbols;
       default:
         return [];
     }
@@ -30,19 +30,19 @@ class Utils {
 
   String generatePassword() {
     for (var i = 0; i < 4; i++) {
-      temp[names[i]] = freq.removeLast();
-      freq.shuffle();
+      _temp[_names[i]] = _freq.removeLast();
+      _freq.shuffle();
     }
-    temp.forEach((key, value) {
-      List name = getIdentifierList(key);
+    _temp.forEach((key, value) {
+      List name = _getIdentifierList(key);
       int rint;
       for (var i = 0; i < value; i++) {
         rint = Random.secure().nextInt(name.length);
-        pwd.add(name[rint]);
+        _pwd.add(name[rint]);
       }
     });
-    pwd.shuffle();
-    return pwd.join();
+    _pwd.shuffle();
+    return _pwd.join();
   }
 
   static void dispToast(String msg) {

@@ -15,20 +15,20 @@ class PopUpCard extends StatefulWidget {
 }
 
 class _PopUpCardState extends State<PopUpCard> {
-  String pwdTitle = '....'; //It shows this text when the card pops up.
-  var info = {};
-  var height;
-  var width;
-  bool isShown = false;
+  String _pwdTitle = '....'; //It shows this text when the card pops up.
+  var _info = {};
+  var _height;
+  var _width;
+  bool _isShown = false;
 
   @override
   void initState() {
     super.initState();
-    info = Provider.of<Credential>(context, listen: false).findById(widget.id);
+    _info = Provider.of<Credential>(context, listen: false).findById(widget.id);
   }
 
   // Defines how the text is shown on Card.
-  Widget showText(String key, String val) {
+  Widget _showText(String key, String val) {
     key = key.replaceRange(0, 1, key.split('')[0].toUpperCase());
     return Container(
       alignment: Alignment.topLeft,
@@ -58,12 +58,12 @@ class _PopUpCardState extends State<PopUpCard> {
   }
 
   // returns list of Text that contains all the info of selected app except password.
-  List<Widget> cardContent() {
+  List<Widget> _cardContent() {
     List<Widget> lst = [];
-    info.forEach(
+    _info.forEach(
       (key, value) {
         if (key != 'password' && key != 'app') {
-          lst.add(showText(key, value));
+          lst.add(_showText(key, value));
           lst.add(
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -83,31 +83,31 @@ class _PopUpCardState extends State<PopUpCard> {
   }
 
   // It returns a ListTile of password field which is shown on screen. If user taps it then the decrypt() is called and actual password is shown.
-  Widget password() {
+  Widget _password() {
     return InkWell(
-        child: showText('Password', pwdTitle),
+        child: _showText('Password', _pwdTitle),
         onTap: () async {
-          if (isShown == false)
-            isShown = true;
+          if (_isShown == false)
+            _isShown = true;
           else
-            isShown = false;
-          String cipher = info['password'];
+            _isShown = false;
+          String cipher = _info['password'];
           String pwd = await decrypt(cipher);
           setState(() {
-            if (isShown) {
-              pwdTitle = pwd;
+            if (_isShown) {
+              _pwdTitle = pwd;
             } else {
-              pwdTitle = '....';
+              _pwdTitle = '....';
             }
           });
         });
   }
 
   // It is the main widget that is given to child of Dialog. It contains a column that calls cardContent and password if present.
-  Widget popUpContent() {
+  Widget _popUpContent() {
     return Container(
-      height: height * 0.4,
-      width: width * 0.5,
+      height: _height * 0.4,
+      width: _width * 0.5,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.popUpCardColor,
@@ -118,7 +118,7 @@ class _PopUpCardState extends State<PopUpCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              info['app'],
+              _info['app'],
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AppColors.backgroundColor,
@@ -128,8 +128,8 @@ class _PopUpCardState extends State<PopUpCard> {
             SizedBox(
               height: 20,
             ),
-            ...cardContent(),
-            if (info.containsKey('password')) password(),
+            ..._cardContent(),
+            if (_info.containsKey('password')) _password(),
           ],
         ),
       ),
@@ -138,8 +138,8 @@ class _PopUpCardState extends State<PopUpCard> {
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -152,7 +152,7 @@ class _PopUpCardState extends State<PopUpCard> {
           return CustomRectTween(begin: begin, end: end);
         },
         child: Material(
-            borderRadius: BorderRadius.circular(16), child: popUpContent()),
+            borderRadius: BorderRadius.circular(16), child: _popUpContent()),
       ),
     );
   }

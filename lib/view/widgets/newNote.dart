@@ -17,8 +17,8 @@ class NewNote extends StatefulWidget {
 
 class _NewNoteState extends State<NewNote> {
   var _height;
-  bool validatation = true;
-  bool read = false;
+  bool _validatation = true;
+  bool _read = false;
 
   final TextEditingController _titleCtrl = TextEditingController();
   final TextEditingController _contentCtrl = TextEditingController();
@@ -31,7 +31,7 @@ class _NewNoteState extends State<NewNote> {
 		// Checks if the note is for reading.
     if (widget.noteId.isNotEmpty) {
       _forRead();
-      read = true;
+      _read = true;
     }
   }
 
@@ -53,7 +53,7 @@ class _NewNoteState extends State<NewNote> {
   }
 
 	// Checks if the textFields are not empty.
-  bool validate(String str) {
+  bool _validate(String str) {
     if (str.isEmpty) {
       return false;
     }
@@ -129,11 +129,11 @@ class _NewNoteState extends State<NewNote> {
             TextField(
               controller: _titleCtrl,
               autofocus: true,
-              readOnly: read,
+              readOnly: _read,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: validatation ? "Title" : "Add Note Title",
-                hintStyle: validatation ? null : TextStyle(color: Colors.red),
+                hintText: _validatation ? "Title" : "Add Note Title",
+                hintStyle: _validatation ? null : TextStyle(color: Colors.red),
                 contentPadding: EdgeInsets.fromLTRB(10, 20, 10, 5),
               ),
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -149,7 +149,7 @@ class _NewNoteState extends State<NewNote> {
                 controller: _contentCtrl,
                 focusNode: _contentFn,
                 keyboardType: TextInputType.multiline,
-                readOnly: read,
+                readOnly: _read,
                 maxLines: null,
                 style: TextStyle(fontSize: 20),
                 decoration: InputDecoration(
@@ -160,9 +160,9 @@ class _NewNoteState extends State<NewNote> {
                       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
                 onTap: () {
-                  if (read) {
+                  if (_read) {
                     setState(() {
-                      read = false;
+                      _read = false;
                     });
                     _contentFn.requestFocus();
                   }
@@ -172,7 +172,7 @@ class _NewNoteState extends State<NewNote> {
           ],
         ),
       ),
-      floatingActionButton: read
+      floatingActionButton: _read
           ? null
           : FloatingActionButton(
               child: Icon(
@@ -181,13 +181,13 @@ class _NewNoteState extends State<NewNote> {
                 size: 30,
               ),
               onPressed: () {
-                if (!validate(_titleCtrl.text)) {
+                if (!_validate(_titleCtrl.text)) {
                   setState(() {
-                    validatation = false;
+                    _validatation = false;
                   });
                   return;
                 }
-                if (!validate(_contentCtrl.text)) {
+                if (!_validate(_contentCtrl.text)) {
                   Utils.dispToast('Can\'t add an empty note !!!');
                   return;
                 }

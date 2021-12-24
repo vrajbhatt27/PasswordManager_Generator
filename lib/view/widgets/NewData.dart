@@ -26,12 +26,12 @@ class _NewData extends State<NewData> {
   FocusNode _mnoFocusNode = FocusNode();
   FocusNode _otherFocusNode = FocusNode();
   Map<String, dynamic> _appInfo = {};
-  bool update = false;
-  bool validated = true;
-  List<Widget> textFields = [];
+  bool _update = false;
+  bool _validated = true;
+  List<Widget> _textFields = [];
 
   // Used for buttons in bottom sheet. If the textField is present , then to remove it and Vice Versa.
-  Map isPressed = {
+  Map _isPressed = {
     'Email': false,
     'userId': false,
     'Password': false,
@@ -43,7 +43,7 @@ class _NewData extends State<NewData> {
   @override
   initState() {
     if (widget.appId.isNotEmpty) {
-      update = true;
+      _update = true;
       _forUpdateData();
     } else {
       _appFocusNode.requestFocus();
@@ -170,14 +170,14 @@ class _NewData extends State<NewData> {
     }
 
     for (var i = 0; i < fillContentNames.length; i++) {
-      textFields
-          .add(buildTextField(fillContentNames[i], fillContentCtrl[i], null));
-      isPressed[fillContentNames[i]] = true;
+      _textFields
+          .add(_buildTextField(fillContentNames[i], fillContentCtrl[i], null));
+      _isPressed[fillContentNames[i]] = true;
     }
   }
 
   // Used to display text on bottom sheet. Widget that returns Text.
-  Widget showText(String text) {
+  Widget _showText(String text) {
     return Text(
       text,
       style: TextStyle(color: Colors.white, fontSize: 18),
@@ -185,7 +185,7 @@ class _NewData extends State<NewData> {
   }
 
   // Widget that returns TextField.
-  Widget buildTextField(String lbl, TextEditingController ctrl, FocusNode fn) {
+  Widget _buildTextField(String lbl, TextEditingController ctrl, FocusNode fn) {
     TextInputType keyboard;
     if (lbl == 'Email') {
       keyboard = TextInputType.emailAddress;
@@ -210,7 +210,7 @@ class _NewData extends State<NewData> {
   }
 
   // It is used to build the buttons in bottom sheet for opening textField.
-  List<Widget> buildButtons() {
+  List<Widget> _buildButtons() {
     var icons = [
       Icons.email,
       Icons.account_circle_outlined,
@@ -251,13 +251,13 @@ class _NewData extends State<NewData> {
               fn = _otherFocusNode;
             }
 
-            if (isPressed[name] == false)
-              add2List(name, ctrl, fn);
+            if (_isPressed[name] == false)
+              _add2List(name, ctrl, fn);
             else {
               setState(() {
                 ctrl.text = '';
               });
-              removeFromList(name);
+              _removeFromList(name);
             }
           },
           child: CircleAvatar(
@@ -276,19 +276,19 @@ class _NewData extends State<NewData> {
   }
 
   // On button press it adds the respective textfield in the list.
-  void add2List(String lbl, TextEditingController ctrl, FocusNode fn) {
+  void _add2List(String lbl, TextEditingController ctrl, FocusNode fn) {
     setState(() {
-      isPressed[lbl] = true;
-      textFields.add(buildTextField(lbl, ctrl, fn));
+      _isPressed[lbl] = true;
+      _textFields.add(_buildTextField(lbl, ctrl, fn));
       fn.requestFocus();
     });
   }
 
   // On pressing the button if the textField is already present, then this removes it from sheet.
-  void removeFromList(String lbl) {
+  void _removeFromList(String lbl) {
     setState(() {
-      isPressed[lbl] = false;
-      textFields.removeWhere((e) => e.key == Key(lbl));
+      _isPressed[lbl] = false;
+      _textFields.removeWhere((e) => e.key == Key(lbl));
     });
   }
 
@@ -308,7 +308,7 @@ class _NewData extends State<NewData> {
             children: [
               Row(
                 children: [
-                  showText('App: '),
+                  _showText('App: '),
                   SizedBox(width: 5),
                   Expanded(
                     child: TextField(
@@ -316,7 +316,7 @@ class _NewData extends State<NewData> {
                       focusNode: _appFocusNode,
                       style: TextStyle(color: Colors.white, fontSize: 18),
                       decoration: InputDecoration(
-                        hintText: validated ? null : 'Please Enter App Name',
+                        hintText: _validated ? null : 'Please Enter App Name',
                         hintStyle: TextStyle(color: Colors.red, fontSize: 22),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -329,7 +329,7 @@ class _NewData extends State<NewData> {
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: buildButtons(),
+                children: _buildButtons(),
               ),
               Divider(
                 color: Colors.white,
@@ -337,7 +337,7 @@ class _NewData extends State<NewData> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: textFields,
+                    children: _textFields,
                   ),
                 ),
               ),
@@ -348,14 +348,14 @@ class _NewData extends State<NewData> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: update
+                    onPressed: _update
                         ? () => _addData(id: widget.appId)
                         : () {
                             if (_appCtrl.text.isNotEmpty) {
                               _addData();
                             } else {
                               setState(() {
-                                validated = false;
+                                _validated = false;
                               });
                             }
                           },

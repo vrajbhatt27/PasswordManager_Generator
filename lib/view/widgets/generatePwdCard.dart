@@ -10,18 +10,18 @@ class GeneratePwdCard extends StatefulWidget {
 }
 
 class _GeneratePwdCardState extends State<GeneratePwdCard> {
-  var width, height, pwd;
+  var _width, _height, _pwd;
 
   @override
   initState() {
     super.initState();
-    pwd = Utils().generatePassword();
+    _pwd = Utils().generatePassword();
   }
 
   Widget popUpContent() {
     return Container(
-      height: height * 0.25,
-      width: width * 0.5,
+      height: _height * 0.25,
+      width: _width * 0.5,
       padding: EdgeInsets.all(40),
       decoration: BoxDecoration(
         color: AppColors.popUpCardColor,
@@ -45,7 +45,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
                     margin: EdgeInsets.only(right: 20),
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      pwd,
+                      _pwd,
                       style: TextStyle(
                         color: AppColors.popUpCardColor,
                         fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
                     color: AppColors.backgroundColor,
                     icon: Icon(Icons.copy),
                     onPressed: () {
-                      FlutterClipboard.copy(pwd);
+                      FlutterClipboard.copy(_pwd);
                       Utils.dispToast('Copied To Clipboard');
                     },
                   ),
@@ -73,7 +73,7 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  pwd = Utils().generatePassword();
+                  _pwd = Utils().generatePassword();
                 });
               },
               child: Text(
@@ -93,8 +93,8 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),

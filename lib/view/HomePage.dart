@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final globalKey = GlobalKey<ScaffoldState>();
+  final _globalKey = GlobalKey<ScaffoldState>();
   var _height;
   bool _notesSelected = false;
 
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget showMsgWhenEmptyFile() {
+  Widget _showMsgWhenEmptyFile() {
     String dataName = _notesSelected ? 'notes' : 'credentials';
     return Center(
       child: Column(
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         _notesSelected ? Provider.of<Notes>(context).notesData.isEmpty : Provider.of<Credential>(context).data.isEmpty;
     _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      key: globalKey,
+      key: _globalKey,
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -185,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                 height: _height * 0.73,
                 color: AppColors.backgroundColor,
                 child: noDataInFile
-                    ? showMsgWhenEmptyFile()
+                    ? _showMsgWhenEmptyFile()
                     : _notesSelected
                         ? ShowNotes()
                         : ShowData(_addNewData),

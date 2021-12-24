@@ -54,23 +54,23 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
-  final globalKey = GlobalKey<ScaffoldState>();
-  String exp = '';
-  String ans = '';
-  bool isEvaluated = false;
-  String p1, p2;
+  final _globalKey = GlobalKey<ScaffoldState>();
+  String _exp = '';
+  String _ans = '';
+  bool _isEvaluated = false;
+  String _p1, _p2;
 
   @override
   void initState() {
     super.initState();
     Provider.of<Credential>(context, listen: false).fetchAndSetData();
     Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
-    fetchAndSetPwds();
+    _fetchAndSetPwds();
     Backup.initDir();
   }
 
   // Sets the p1(main password) and p2(drawer).
-  Future<void> fetchAndSetPwds() async {
+  Future<void> _fetchAndSetPwds() async {
     HiveHandler h = HiveHandler('login');
 
     // If the user is newly installed then dialog is shown to set p1 and p2.
@@ -84,13 +84,13 @@ class _CalculatorState extends State<Calculator> {
     }
 
     Map<String, dynamic> data = await h.read();
-    p1 = await decrypt(data['p1']);
-    p2 = await decrypt(data['p2']);
+    _p1 = await decrypt(data['p1']);
+    _p2 = await decrypt(data['p2']);
   }
 
   // Evaluates the expression from calculator and returns the ans.
-  String evaluate() {
-    String inp = exp.replaceAll(RegExp(r'x'), '*');
+  String _evaluate() {
+    String inp = _exp.replaceAll(RegExp(r'x'), '*');
     String val;
 
     try {
@@ -110,79 +110,79 @@ class _CalculatorState extends State<Calculator> {
   }
 
   // Specifies action for each button on calculator.
-  void actionOnButtonPressed(String text) {
-    if (isEvaluated) {
-      isEvaluated = false;
+  void _actionOnButtonPressed(String text) {
+    if (_isEvaluated) {
+      _isEvaluated = false;
       setState(() {
         if (text == '/' ||
             text == 'x' ||
             text == '+' ||
             text == '-' ||
             text == ' mod ') {
-          exp = ans;
+          _exp = _ans;
         } else {
-          exp = '';
+          _exp = '';
         }
-        ans = '';
+        _ans = '';
       });
     }
 
     if (text == "AC") {
       setState(() {
-        exp = '';
-        ans = '';
+        _exp = '';
+        _ans = '';
       });
     } else if (text == "C") {
-      if (exp.isNotEmpty) {
-        var lst = exp.split('');
+      if (_exp.isNotEmpty) {
+        var lst = _exp.split('');
         lst.removeLast();
         setState(() {
-          exp = lst.join();
+          _exp = lst.join();
         });
       } else {
         setState(() {
-          ans = '';
+          _ans = '';
         });
       }
     } else if (text == "=") {
-      isEvaluated = true;
-      if (exp == p1) {
+      _isEvaluated = true;
+      if (_exp == _p1) {
         // Opens the HomePage.
         // Navigator.of(context).pushNamed(HomePage.routeName);
         Navigator.of(context).popAndPushNamed(HomePage.routeName);
-      } else if (exp == p2) {
+      } else if (_exp == _p2) {
         setState(() {
-          ans = '';
-          exp = '';
+          _ans = '';
+          _exp = '';
         });
         // Opens the drawer for direct password access.
-        globalKey.currentState.openEndDrawer();
-      } else if (exp.contains("mod")) {
-        var lst = exp.split(' ');
+        _globalKey.currentState.openEndDrawer();
+      } else if (_exp.contains("mod")) {
+        var lst = _exp.split(' ');
         int n1 = int.parse(lst[0]);
         int n2 = int.parse(lst[2]);
         var res = n1 % n2;
         setState(() {
-          ans = res.toString();
+          _ans = res.toString();
         });
         // exp = '';
       } else {
         setState(() {
-          ans = evaluate();
+          _ans = _evaluate();
         });
         // exp = '';
       }
     } else {
       setState(() {
-        exp += text;
+        _exp += text;
       });
     }
   }
 
   // Builds buttons for calculator.
-  Widget customButton(String text) {
+  Widget _customButton(String text) {
     return InkWell(
-      onTap: () => actionOnButtonPressed(text),
+      onTap: () => _actionOnButtonPressed(text),
       child: Container(
         margin: EdgeInsets.all(6.0),
         height: double.infinity,
@@ -202,7 +202,7 @@ class _CalculatorState extends State<Calculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: globalKey,
+      key: _globalKey,
       endDrawer: Drawer(
         //Opens the drawer for direct password access.
         child: BackdropFilter(
@@ -237,14 +237,14 @@ class _CalculatorState extends State<Calculator> {
                         fit: FlexFit.tight,
                         flex: 5,
                         child: Text(
-                          exp,
+                          _exp,
                           style: TextStyle(color: Colors.white, fontSize: 35),
                         ),
                       ),
                       Expanded(
                         flex: 3,
                         child: Text(
-                          ans,
+                          _ans,
                           style: TextStyle(color: Colors.white, fontSize: 30),
                         ),
                       ),
@@ -269,10 +269,10 @@ class _CalculatorState extends State<Calculator> {
                           child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(flex: 1, child: customButton("AC")),
-                              Flexible(flex: 1, child: customButton("C")),
-                              Flexible(flex: 1, child: customButton(" mod ")),
-                              Flexible(flex: 1, child: customButton("/"))
+                              Flexible(flex: 1, child: _customButton("AC")),
+                              Flexible(flex: 1, child: _customButton("C")),
+                              Flexible(flex: 1, child: _customButton(" mod ")),
+                              Flexible(flex: 1, child: _customButton("/"))
                             ],
                           ),
                         ),
@@ -285,10 +285,10 @@ class _CalculatorState extends State<Calculator> {
                           child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(flex: 1, child: customButton("7")),
-                              Flexible(flex: 1, child: customButton("8")),
-                              Flexible(flex: 1, child: customButton("9")),
-                              Flexible(flex: 1, child: customButton("x"))
+                              Flexible(flex: 1, child: _customButton("7")),
+                              Flexible(flex: 1, child: _customButton("8")),
+                              Flexible(flex: 1, child: _customButton("9")),
+                              Flexible(flex: 1, child: _customButton("x"))
                             ],
                           ),
                         ),
@@ -301,10 +301,10 @@ class _CalculatorState extends State<Calculator> {
                           child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(flex: 1, child: customButton("4")),
-                              Flexible(flex: 1, child: customButton("5")),
-                              Flexible(flex: 1, child: customButton("6")),
-                              Flexible(flex: 1, child: customButton("-"))
+                              Flexible(flex: 1, child: _customButton("4")),
+                              Flexible(flex: 1, child: _customButton("5")),
+                              Flexible(flex: 1, child: _customButton("6")),
+                              Flexible(flex: 1, child: _customButton("-"))
                             ],
                           ),
                         ),
@@ -317,10 +317,10 @@ class _CalculatorState extends State<Calculator> {
                           child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(flex: 1, child: customButton("1")),
-                              Flexible(flex: 1, child: customButton("2")),
-                              Flexible(flex: 1, child: customButton("3")),
-                              Flexible(flex: 1, child: customButton("+"))
+                              Flexible(flex: 1, child: _customButton("1")),
+                              Flexible(flex: 1, child: _customButton("2")),
+                              Flexible(flex: 1, child: _customButton("3")),
+                              Flexible(flex: 1, child: _customButton("+"))
                             ],
                           ),
                         ),
@@ -333,9 +333,9 @@ class _CalculatorState extends State<Calculator> {
                           child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(flex: 2, child: customButton("0")),
-                              Flexible(flex: 1, child: customButton(".")),
-                              Flexible(flex: 1, child: customButton("=")),
+                              Flexible(flex: 2, child: _customButton("0")),
+                              Flexible(flex: 1, child: _customButton(".")),
+                              Flexible(flex: 1, child: _customButton("=")),
                             ],
                           ),
                         ),

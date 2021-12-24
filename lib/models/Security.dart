@@ -21,10 +21,8 @@ Future encrypt(String pwd) async {
 
   if (data.isEmpty) {
     await createFile();
+		data = await h.read();
   }
-
-	//! Optimization
-  data = await h.read();
 
   final key = crypto.Key.fromBase64(data['key']);
   final iv = crypto.IV.fromBase64(data['iv']);

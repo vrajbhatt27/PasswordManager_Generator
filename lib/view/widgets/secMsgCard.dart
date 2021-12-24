@@ -12,14 +12,14 @@ class SecretMsgCard extends StatefulWidget {
 
 class SecretMsgCardState extends State<SecretMsgCard> {
   FocusNode _fn = FocusNode();
-  var width, height, pwd;
+  var _width, _height;
   final _msgCtrl = TextEditingController();
-  var encMsg, decMsg;
+  var _encMsg, _decMsg;
 
-  Widget popUpContent() {
+  Widget _popUpContent() {
     return Container(
-      height: height * 0.3,
-      width: width * 0.7,
+      height: _height * 0.3,
+      width: _width * 0.7,
       padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
       decoration: BoxDecoration(
         color: AppColors.popUpCardColor,
@@ -88,8 +88,8 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                     onPressed: () async {
                       if (_msgCtrl.text.isNotEmpty) {
                         _fn.unfocus();
-                        encMsg = await encryptMsg(_msgCtrl.text);
-                        _msgCtrl.text = encMsg;
+                        _encMsg = await encryptMsg(_msgCtrl.text);
+                        _msgCtrl.text = _encMsg;
                       }
                     },
                   ),
@@ -102,8 +102,8 @@ class SecretMsgCardState extends State<SecretMsgCard> {
                     onPressed: () async {
                       if (_msgCtrl.text.isNotEmpty) {
                         _fn.unfocus();
-                        decMsg = await decryptMsg(_msgCtrl.text);
-                        _msgCtrl.text = decMsg;
+                        _decMsg = await decryptMsg(_msgCtrl.text);
+                        _msgCtrl.text = _decMsg;
                       }
                     },
                   ),
@@ -118,8 +118,8 @@ class SecretMsgCardState extends State<SecretMsgCard> {
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -133,7 +133,7 @@ class SecretMsgCardState extends State<SecretMsgCard> {
         },
         child: Material(
           borderRadius: BorderRadius.circular(16),
-          child: popUpContent(),
+          child: _popUpContent(),
         ),
       ),
     );
