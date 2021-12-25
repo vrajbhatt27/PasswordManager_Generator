@@ -190,7 +190,7 @@ class _CalculatorState extends State<Calculator> {
           _ans = '';
           _exp = '';
         });
-        await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
+        await Provider.of<Credential>(context, listen: false).fetchAndSetData();
         // Opens the drawer for direct password access.
         _globalKey.currentState.openEndDrawer();
       } else if (_exp.contains("mod")) {
