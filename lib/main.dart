@@ -63,15 +63,7 @@ class _CalculatorState extends State<Calculator> {
   @override
   void initState() {
     super.initState();
-    Backup.initDir().then((value) {
-      if (value) {
-        _fetchAndSetPwds();
-      } else {
-        showError();
-      }
-    });
-    Provider.of<Credential>(context, listen: false).fetchAndSetData();
-    Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
+    _fetchAndSetPwds();
   }
 
   // Show Error Dialog for permission not given.
@@ -104,6 +96,14 @@ class _CalculatorState extends State<Calculator> {
 
   // Sets the p1(main password) and p2(drawer).
   Future<void> _fetchAndSetPwds() async {
+    // Check If the permission is given;
+    bool permissionGiven = await Backup.initDir();
+
+    if (!permissionGiven) {
+      showError();
+      return;
+    }
+
     HiveHandler h = HiveHandler('login');
 
     // If the user is newly installed then dialog is shown to set p1 and p2.
@@ -143,7 +143,7 @@ class _CalculatorState extends State<Calculator> {
   }
 
   // Specifies action for each button on calculator.
-  void _actionOnButtonPressed(String text) {
+  void _actionOnButtonPressed(String text) async {
     if (_isEvaluated) {
       _isEvaluated = false;
       setState(() {
@@ -179,15 +179,18 @@ class _CalculatorState extends State<Calculator> {
       }
     } else if (text == "=") {
       _isEvaluated = true;
+			//! If there is problem in loading data then change this Providers to initState(). 
       if (_exp == _p1) {
         // Opens the HomePage.
-        // Navigator.of(context).pushNamed(HomePage.routeName);
+        await Provider.of<Credential>(context, listen: false).fetchAndSetData();
+        await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
         Navigator.of(context).popAndPushNamed(HomePage.routeName);
       } else if (_exp == _p2) {
         setState(() {
           _ans = '';
           _exp = '';
         });
+        await Provider.of<Notes>(context, listen: false).fetchAndSetNotesData();
         // Opens the drawer for direct password access.
         _globalKey.currentState.openEndDrawer();
       } else if (_exp.contains("mod")) {
