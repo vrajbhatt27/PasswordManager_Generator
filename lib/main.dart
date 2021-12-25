@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,6 +23,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
+
+	SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(MyApp());
 }
