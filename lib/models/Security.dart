@@ -1,9 +1,17 @@
 import 'package:encrypt/encrypt.dart' as crypto;
+import 'package:password_manager/models/passwordGenerator.dart';
 import './hiveHandler.dart';
 
 // If not present creates new key and iv and then stores that in Hive.
 Future<bool> createFile() async {
-  final key = crypto.Key.fromUtf8('#E6@O`Xp9fD4T(,!^"w:l!V81sMFca2l');
+  String str = '';
+  while (str.length < 36) {
+    str += Utils().generatePassword();
+  }
+  str = str.substring(0, 32);
+  print(str.length);
+  print(str);
+  final key = crypto.Key.fromUtf8(str);
   final iv = crypto.IV.fromLength(16);
 
   Map<String, dynamic> data = {'key': key.base64, 'iv': iv.base64};
@@ -21,7 +29,7 @@ Future encrypt(String pwd) async {
 
   if (data.isEmpty) {
     await createFile();
-		data = await h.read();
+    data = await h.read();
   }
 
   final key = crypto.Key.fromBase64(data['key']);
