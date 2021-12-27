@@ -31,59 +31,64 @@ class _GeneratePwdCardState extends State<GeneratePwdCard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                Flexible(
-                  flex: 5,
-                  child: Container(
-                    height: 40,
-                    width: 170,
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    margin: EdgeInsets.only(right: 20),
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      _pwd,
-                      style: TextStyle(
-                        color: AppColors.popUpCardColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                height: 40,
+                // width: 170,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                margin: EdgeInsets.only(right: 20),
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  _pwd,
+                  style: TextStyle(
+                    color: AppColors.popUpCardColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: IconButton(
-                    color: AppColors.backgroundColor,
-                    icon: Icon(Icons.copy),
-                    onPressed: () {
-                      FlutterClipboard.copy(_pwd);
-                      Utils.dispToast('Copied To Clipboard');
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(
               height: 10,
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _pwd = Utils().generatePassword();
-                });
-              },
-              child: Text(
-                'Generate',
-                style: TextStyle(
-                  color: AppColors.backgroundColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _pwd = Utils().generatePassword();
+                    });
+                  },
+                  child: Text(
+                    'Generate',
+                    style: TextStyle(
+                      color: AppColors.backgroundColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
-              ),
+                Text(
+                  '|',
+                  style: TextStyle(
+                    color: AppColors.backgroundColor.withOpacity(0.5),
+                    fontSize: 30,
+                  ),
+                ),
+                IconButton(
+                  color: AppColors.backgroundColor,
+                  icon: Icon(Icons.copy),
+                  onPressed: () {
+                    FlutterClipboard.copy(_pwd);
+                    Utils.dispToast('Copied To Clipboard');
+                  },
+                ),
+              ],
             ),
           ],
         ),
