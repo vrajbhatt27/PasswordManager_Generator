@@ -25,7 +25,7 @@ class Backup {
               break;
             }
           }
-          newPath = newPath + "/TheCalc";
+          newPath = newPath + "/Calcy";
           directory = Directory(newPath);
         } else {
           return false;
